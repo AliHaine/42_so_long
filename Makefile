@@ -1,16 +1,19 @@
-NAME = so_long.a
+NAME = so_long
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra
-SRCS =	so_long.c
-MINILIBX = -I /usr/X11/include -g -L /usr/X11/lib -l mlx -framework OpenGL -framework AppKit
+SRCS =	so_long.c \
+		srcs/msg_manager.c \
+		srcs/map_manager.c
+INC	= -I ../MLX42/include
+MINILIBX = ../MLX42/libmlx42.a -lglfw -L "/Users/$$USER/.brew/opt/glfw/lib/" 
 
 OBJS = ${SRCS:.c=.o}
 
 .c.o:
-	${CC} ${CFLAGS} -g -c $< -o ${<:.c=.o}
+	${CC} ${CFLAGS} $(INC) -g -c $< -o ${<:.c=.o}
 
 $(NAME): $(OBJS)
-	ar rc $(NAME) $(OBJS)
+	$(CC) $(CFLAGS) $(MINILIBX) $(OBJS) -o $(NAME)
 
 all: $(NAME)
 
