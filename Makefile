@@ -3,7 +3,9 @@ CC = gcc
 CFLAGS = -Wall -Werror -Wextra
 SRCS =	so_long.c \
 		srcs/msg_manager.c \
-		srcs/map_manager.c
+		srcs/map_manager.c \
+		utils/get_next_line/get_next_line.c \
+		utils/get_next_line/get_next_line_utils.c
 INC	= -I ../MLX42/include
 MINILIBX = ../MLX42/libmlx42.a -lglfw -L "/Users/$$USER/.brew/opt/glfw/lib/" 
 
