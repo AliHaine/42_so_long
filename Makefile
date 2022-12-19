@@ -12,10 +12,10 @@ MINILIBX = ../MLX42/libmlx42.a -lglfw -L "/Users/$$USER/.brew/opt/glfw/lib/"
 OBJS = ${SRCS:.c=.o}
 
 .c.o:
-	${CC} ${CFLAGS} $(INC) -g -c $< -o ${<:.c=.o}
+	${CC} ${CFLAGS} $(INC) -g3 -c $< -o ${<:.c=.o}
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(MINILIBX) $(OBJS) -o $(NAME)
+	$(CC) $(CFLAGS) $(MINILIBX) $(OBJS) -fsanitize=address -o $(NAME)
 
 all: $(NAME)
 

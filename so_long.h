@@ -9,14 +9,14 @@ typedef enum MSG
 	ERROR_MAP
 } msg;
 
-typedef struct map
+typedef struct s_map
 {
 	int x;
 	int y;
 	int content;
-	struct map *prev;
-	struct map *next;
-} map_s;
+	struct s_map *prev;
+	struct s_map *next;
+} t_map;
 
 # include "MLX42/MLX42.h"
 # include <string.h>

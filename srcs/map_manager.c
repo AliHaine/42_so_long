@@ -1,17 +1,21 @@
 #include "../so_long.h"
 
-void test_parcour(map_s *s)
+void test_parcour(t_map *s)
 {
-	printf("t1");
-	printf("d = %d", s->prev->prev->prev->x);
-	int i = 0;
-	while (i < 0)
+	(void)s;
+	printf("next = %p\n", (s)->next);
+	printf("actu = %p\n", (s));
+	printf("prec = %p\n", (s)->prev->prev);
+	//printf("d = %d", s->prev->x);
+	/*while (s)
 	{
 		printf("t2");
+		if (s->prev == NULL)
+			break ;
 		s = s->prev;
-		i++;
-	}/*
-	while(!s->next)
+	}*/
+
+	/*while(!s->next)
 	{
 		printf("x = %d", s->x);
 		printf("y = %d", s->y);
@@ -19,24 +23,25 @@ void test_parcour(map_s *s)
 	}*/
 }
 
-static map_s*	setup_map_struct(char c, int x, int y, map_s *prev)
+static t_map*	setup_map_struct(char c, int x, int y, t_map **prev)
 {
 	(void)c;
-	map_s *tile;
+	t_map *tile;
 
 	tile = malloc(sizeof(tile));
 	if (tile == 0)
 		return (0);
-	if (prev == 0)
+	if (!*prev)
 	{
 		tile->prev = NULL;
 	}
 	else
 	{
-		tile->prev = prev;
-		prev->next = tile;
+		tile->prev = *prev;
+		//prev->next = tile;
 	}
-
+	//printf("x = %d", x);
+	//printf("y = %d\n", y);
 	tile->x = x;
 	tile->y = y;
 	tile->content = 0;
@@ -46,29 +51,48 @@ static map_s*	setup_map_struct(char c, int x, int y, map_s *prev)
 static int	check_map_validity(int fd)
 {
 	//int		size;
+	(void)fd;
 	int		i;
 	int		x;
 	int 	y;
-	map_s	*prev;
-	char	*line;
+	t_map	*prev;
+	char	line[] = "salut je test";
 
 	i = 0;
 	x = 0;
 	y = 0;
-	while ((line = get_next_line(fd)) != 0)
+	prev = 0;
+	//line = get_next_line(fd);
+	while (1 + 1 == 2)
 	{
+		if (prev != NULL)
+			printf("before prec = %p\n", (prev)->prev);
 		while (line[i] && line[i] != '\n')
 		{
-			prev = setup_map_struct(line[i], x, y, prev);
+			if (i > 0)
+				printf("start prec = %p\n", (prev)->prev);
+			prev = setup_map_struct(line[i], x, y, &prev);
+			if (!prev)
+				return (0);
 			x++;
 			i++;
 		}
 		i = 0;
 		y++;
 		x = 0;
+		printf("precEnd = %p\n", (prev));
+		test_parcour(prev);
+		break;
+
+//		printf("next = %p\n", prev->next);
+		printf("precEnd = %p\n", (prev)->prev);
+		printf("precEnd = %p\n", (prev)->prev);
 	}
-	//printf("salut %d", prev->x);
-	test_parcour(prev);
+	printf("\nResult = %p\n", (prev)->prev);
+	//printf("x = %d", x);
+	//printf("y = %d", y);
+	prev->next = NULL;
+	//test_parcour(&prev);
 	return (1);
 }
 
