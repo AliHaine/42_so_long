@@ -41,7 +41,7 @@ typedef struct s_three_int
 	int size;
 } t_three_int;
 
-# include "MLX42/MLX42.h"
+#include "../MLX42/include/MLX42/MLX42.h"
 # include <string.h>
 # include <unistd.h>
 # include <stdlib.h>
@@ -52,7 +52,7 @@ typedef struct s_three_int
 int		ft_strchr(const char *str, int strchar);
 int		ft_putstr(char *str);
 int		print_enum_msg(enum MSG id);
-void	map_loader(char *file);
+void	map_loader(char *file, mlx_t *mlx);
 void	check_ber(char *file);
 void	free_map(struct s_dblist map);
 

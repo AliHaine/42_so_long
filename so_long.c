@@ -6,7 +6,7 @@ mlx_image_t	*g_img;
 #define WIDTH 1000
 #define HEIGHT 1000
 
-/*void	hook(void *param)
+void	hook(void *param)
 {
 	mlx_t	*mlx;
 
@@ -22,7 +22,7 @@ mlx_image_t	*g_img;
 	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT))
 		g_img->instances[0].x += 5;
 }
-
+/*
 int32_t	main(void)
 {
 	mlx_t	*mlx;
@@ -42,14 +42,22 @@ int32_t	main(void)
 
 int	main(int argc, char *argv[])
 {
+	mlx_t	*mlx;
+	int i = 0;
+
+	mlx = mlx_init(WIDTH, HEIGHT, "MLX42", true);
+	g_img = mlx_new_image(mlx, 128, 128);
+	memset(g_img->pixels, 255, g_img->width * g_img->height * sizeof(int));
+	mlx_image_to_window(mlx, g_img, 0, 0);
+	mlx_loop_hook(mlx, &hook, mlx);
+	mlx_loop(mlx);
+	mlx_terminate(mlx);
 	if (argc != 2)
 		return(print_enum_msg(ERROR_ARGS_NUMBER));
-	map_loader(argv[1]);
-	return (0);
-
-	(void)argc;
-	(void)argv;
-
-
+	map_loader(argv[1], mlx);
+	while (1 + 1 == 2)
+	{
+		i++;
+	}
 	return (0);
 }

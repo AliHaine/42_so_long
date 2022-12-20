@@ -13,6 +13,11 @@ void test_parcour(t_dblist s)
 	}
 }
 
+/*static void start_mlx(mlx_t mlx, t_dblist map)
+{
+
+}*/
+
 static int	set_content_to_map(struct s_map *map, int content)
 {
 	if (content == '0')
@@ -74,7 +79,7 @@ static void	setup_struct_value(t_dblist *map, t_three_int *three_int)
 	three_int->size = 0;
 }
 
-static int	check_map_validity(int fd, int i, char * line)
+static int	check_map_validity(int fd, int i, char *line, mlx_t *mlx)
 {
 	t_dblist	map;
 	t_three_int	three_int;
@@ -97,20 +102,20 @@ static int	check_map_validity(int fd, int i, char * line)
 		i = 0;
 	}
 	map.last->next = NULL;
-	test_parcour(map);
+	mlx = mlx_init(three_int.size * 100, three_int.y * 100, "test", true);
+	//test_parcour(map);
 	return (1);
 }
 
-void	map_loader(char *file)
+void	map_loader(char *file, mlx_t *mlx)
 {
 	int	fd;
 	char *str;
 
 	str = NULL;
-
 	check_ber(file);
 	fd = open(file, O_RDONLY);
-	fd = check_map_validity(fd, 0, str);
+	fd = check_map_validity(fd, 0, str, mlx);
 	if (fd != 1)
 		exit(0);
 }
