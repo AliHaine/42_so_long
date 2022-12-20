@@ -1,119 +1,116 @@
 #include "../so_long.h"
 
-void test_parcour(t_map *s)
+void test_parcour(t_dblist s)
 {
-	(void)s;
-	printf("next = %p\n", (s)->next);
-	printf("actu = %p\n", (s));
-	printf("prec = %p\n", (s)->prev->prev);
-	//printf("d = %d", s->prev->x);
-	/*while (s)
+	t_map *pelem = s.first;
+	while(pelem)
 	{
-		printf("t2");
-		if (s->prev == NULL)
-			break ;
-		s = s->prev;
-	}*/
-
-	/*while(!s->next)
-	{
-		printf("x = %d", s->x);
-		printf("y = %d", s->y);
-		s = s->next;
-	}*/
+		printf("%p", pelem);
+		printf(" %c", pelem->map_value.content);
+		printf(" %d", pelem->map_value.x);
+		printf(" %d\n", pelem->map_value.y);
+		pelem = pelem->next;
+	}
 }
 
-static t_map*	setup_map_struct(char c, int x, int y, t_map **prev)
+static int	set_content_to_map(struct s_map *map, int content)
 {
-	(void)c;
-	t_map *tile;
-
-	tile = malloc(sizeof(tile));
-	if (tile == 0)
-		return (0);
-	if (!*prev)
+	if (content == '0')
 	{
-		tile->prev = NULL;
+		map->map_value.content = '0';
+	}
+	else if (content == '1')
+	{
+		map->map_value.content = '0';
+	}
+	else if (content == 'C')
+	{
+		map->map_value.content = 'C';
+	}
+	else if (content == 'E')
+	{
+		map->map_value.content = 'E';
+	}
+	else if (content == 'P')
+	{
+		map->map_value.content = 'P';
 	}
 	else
 	{
-		tile->prev = *prev;
-		//prev->next = tile;
+		print_enum_msg(ERROR_MAP);
+		return (0);
 	}
-	//printf("x = %d", x);
-	//printf("y = %d\n", y);
-	tile->x = x;
-	tile->y = y;
-	tile->content = 0;
-	return (tile);
-}
-
-static int	check_map_validity(int fd)
-{
-	//int		size;
-	(void)fd;
-	int		i;
-	int		x;
-	int 	y;
-	t_map	*prev;
-	char	line[] = "salut je test";
-
-	i = 0;
-	x = 0;
-	y = 0;
-	prev = 0;
-	//line = get_next_line(fd);
-	while (1 + 1 == 2)
-	{
-		if (prev != NULL)
-			printf("before prec = %p\n", (prev)->prev);
-		while (line[i] && line[i] != '\n')
-		{
-			if (i > 0)
-				printf("start prec = %p\n", (prev)->prev);
-			prev = setup_map_struct(line[i], x, y, &prev);
-			if (!prev)
-				return (0);
-			x++;
-			i++;
-		}
-		i = 0;
-		y++;
-		x = 0;
-		printf("precEnd = %p\n", (prev));
-		test_parcour(prev);
-		break;
-
-//		printf("next = %p\n", prev->next);
-		printf("precEnd = %p\n", (prev)->prev);
-		printf("precEnd = %p\n", (prev)->prev);
-	}
-	printf("\nResult = %p\n", (prev)->prev);
-	//printf("x = %d", x);
-	//printf("y = %d", y);
-	prev->next = NULL;
-	//test_parcour(&prev);
 	return (1);
 }
 
-static void	check_ber(char *file)
+static void setup_map_struct(struct s_dblist *map, struct s_three_int three_int, int content)
 {
-	int	i;
-
-	i = 0;
-	while (file[i])
-		i++;
-	if (file[i - 1] == 'r' && file[i - 2] == 'e' && file[i - 3] == 'b' && file[i - 4] == '.')
+	struct s_map *nouv = malloc(sizeof(nouv));
+	if(!nouv)
 		return ;
-	print_enum_msg(ERROR_MAP);
-	exit(0);
+	nouv->map_value.x = three_int.x;
+	nouv->map_value.y = three_int.y;
+	if (set_content_to_map(nouv, content) == 0)
+	{
+		free_map(*map);
+		exit (0);
+	}
+	nouv->map_value.content = content;
+	nouv->prev = map->last;
+	nouv->next = NULL;
+	if(map->last)
+		map->last->next = nouv;
+	else
+		map->first = nouv;
+	map->last = nouv;
+}
+
+static void	setup_struct_value(t_dblist *map, t_three_int *three_int)
+{
+	map->first = NULL;
+	map->last = NULL;
+	three_int->x = 0;
+	three_int->y = 0;
+	three_int->size = 0;
+}
+
+static int	check_map_validity(int fd, int i, char * line)
+{
+	t_dblist	map;
+	t_three_int	three_int;
+
+	setup_struct_value(&map, &three_int);
+	while ((line = get_next_line(fd)) != 0)
+	{
+		while (line[i] && line[i] != '\n')
+		{
+			setup_map_struct(&map, three_int, line[i]);
+			three_int.x++;
+			i++;
+		}
+		if (three_int.size == 0)
+			three_int.size = three_int.x;
+		else if (three_int.size != three_int.x)
+			return (print_enum_msg(ERROR_MAP));
+		three_int.x = 0;
+		three_int.y++;
+		i = 0;
+	}
+	map.last->next = NULL;
+	test_parcour(map);
+	return (1);
 }
 
 void	map_loader(char *file)
 {
 	int	fd;
-	check_ber(file);
+	char *str;
 
+	str = NULL;
+
+	check_ber(file);
 	fd = open(file, O_RDONLY);
-	check_map_validity(fd);
+	fd = check_map_validity(fd, 0, str);
+	if (fd != 1)
+		exit(0);
 }
