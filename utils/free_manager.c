@@ -1,8 +1,8 @@
 #include "../so_long.h"
 
-void	free_map(struct s_dblist map)
+void	free_map(struct s_dblist ****map)
 {
-	t_map *to_free = map.first;
+	t_map *to_free = (****map).first;
 
 	while (to_free)
 	{
