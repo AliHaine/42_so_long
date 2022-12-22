@@ -2,15 +2,15 @@
 
 void test_parcour(t_dblist *s)
 {
-	printf("//%p//", s->first);
-	t_map *pelem = s->first;
+	printf("//%p//", s->last->prev->prev);
+	t_map *pelem = s->last;
 	while(pelem)
 	{
 		printf("%p", pelem);
 		printf(" %c", pelem->map_value.content);
 		printf(" %d", pelem->map_value.x);
 		printf(" %d\n", pelem->map_value.y);
-		pelem = pelem->next;
+		pelem = pelem->prev;
 	}
 }
 
@@ -19,7 +19,7 @@ void test_parcour(t_dblist *s)
 
 }*/
 
-static int	set_content_to_map(struct s_map *map, int content, struct s_dblist ****controler)
+static int	set_content_to_map(struct s_map *map, int content, struct s_dblist *controler)
 {
 	if (content == '0')
 	{
@@ -43,7 +43,7 @@ static int	set_content_to_map(struct s_map *map, int content, struct s_dblist **
 	}
 	else if (content == 'P')
 	{
-		(****controler).pos = map;
+		controler->pos = map;
 		map->map_value.content = 'P';
 	}
 	else
@@ -54,44 +54,49 @@ static int	set_content_to_map(struct s_map *map, int content, struct s_dblist **
 	return (1);
 }
 
-static void setup_map_struct(struct s_dblist ***map, struct s_three_int *three_int, int content)
+static void setup_map_struct(struct s_dblist *map, struct s_three_int *three_int, int content)
 {
+	static int i = 0;
 
 	struct s_map *nouv = malloc(sizeof(nouv));
 	if(!nouv)
 		return ;
+	if((*map).first)
+		printf(" nn3 %p, %d\n", (*map).first->next, i++);
 	nouv->map_value.x = three_int->x;
 	nouv->map_value.y = three_int->y;
-	if (set_content_to_map(nouv, content, &map) == 0)
+	if (set_content_to_map(nouv, content, map) == 0)
 	{
-		free_map(&map);
+		//free_map(map);
 		exit (0);
 	}
 	nouv->map_value.content = content;
-	nouv->prev = (***map).last;
+	nouv->prev = (*map).last;
+	printf("ointe %p\n", (*map).last);
 	nouv->next = NULL;
-	if((***map).last)
-		(***map).last->next = nouv;
+	if((*map).last)
+		(*map).last->next = nouv;
 	else
-		(***map).first = nouv;
-	(***map).last = nouv;
+		(*map).first = nouv;
+	(*map).last = nouv;
 	printf("Actu %p", nouv);
 	printf(" Next %p", nouv->next);
 	printf(" Prec %p\n", nouv->prev);
-	printf("last %p", (***map).last);
-	printf("first %p\n\n", (***map).first);
+	printf("last %p", (*map).last);
+	printf("first %p", (*map).first);
+	printf(" nn %p\n", (*map).first->next);
 }
 
-static void	setup_struct_value(t_dblist **map, t_three_int *three_int)
+static void	setup_struct_value(t_dblist *map, t_three_int *three_int)
 {
-	(*map)->first = NULL;
-	(*map)->last = NULL;
+	map->first = NULL;
+	map->last = NULL;
 	three_int->x = 0;
 	three_int->y = 0;
 	three_int->size = 0;
 }
 
-static int	check_map_validity(int fd, int i, struct s_dblist **map, struct s_three_int *three_int)
+static int	check_map_validity(int fd, int i, struct s_dblist *map, struct s_three_int *three_int)
 {
 	char	*line;
 
@@ -99,7 +104,8 @@ static int	check_map_validity(int fd, int i, struct s_dblist **map, struct s_thr
 	{
 		while (line[i] && line[i] != '\n')
 		{
-			setup_map_struct(&map, three_int, line[i]);
+			setup_map_struct(map, three_int, line[i]);
+			printf("lsttt %p", map->first->next);
 			three_int->x++;
 			i++;
 		}
@@ -111,7 +117,7 @@ static int	check_map_validity(int fd, int i, struct s_dblist **map, struct s_thr
 		three_int->y++;
 		i = 0;
 	}
-	(**map).last->next = NULL;
+	map->last->next = NULL;
 	//***mlx = mlx_init(three_int.size * 100, three_int.y * 100, "test", true);
 	return (1);
 }
@@ -121,12 +127,12 @@ void	map_loader(char *file, struct s_dblist *map)
 	int	fd;
 	t_three_int	three_int;
 
-	setup_struct_value(&map, &three_int);
+	setup_struct_value(map, &three_int);
 	check_ber(file);
 	fd = open(file, O_RDONLY);
-	fd = check_map_validity(fd, 0, &map, &three_int);
-	printf("salut %p", map->last);
-	printf("salut %p\n", map->first);
+	fd = check_map_validity(fd, 0, map, &three_int);
+	/*printf("salut %p", map->last);
+	printf("salut %p\n", map->first->next);*/
 	test_parcour(map);
 	map->mlx = mlx_init(three_int.size * 64, three_int.y * 64, "test", true);
 	if (fd != 1)
