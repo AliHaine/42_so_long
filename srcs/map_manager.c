@@ -56,35 +56,24 @@ static int	set_content_to_map(struct s_map *map, int content, struct s_dblist *c
 
 static void setup_map_struct(struct s_dblist *map, struct s_three_int *three_int, int content)
 {
-	static int i = 0;
-
-	struct s_map *nouv = malloc(sizeof(nouv));
+	struct s_map *nouv = malloc(sizeof(*nouv));
 	if(!nouv)
 		return ;
-	if((*map).first)
-		printf(" nn3 %p, %d\n", (*map).first->next, i++);
 	nouv->map_value.x = three_int->x;
 	nouv->map_value.y = three_int->y;
 	if (set_content_to_map(nouv, content, map) == 0)
 	{
-		//free_map(map);
-		exit (0);
+		free_map(map);
+		exit(0);
 	}
 	nouv->map_value.content = content;
 	nouv->prev = (*map).last;
-	printf("ointe %p\n", (*map).last);
 	nouv->next = NULL;
 	if((*map).last)
 		(*map).last->next = nouv;
 	else
 		(*map).first = nouv;
 	(*map).last = nouv;
-	printf("Actu %p", nouv);
-	printf(" Next %p", nouv->next);
-	printf(" Prec %p\n", nouv->prev);
-	printf("last %p", (*map).last);
-	printf("first %p", (*map).first);
-	printf(" nn %p\n", (*map).first->next);
 }
 
 static void	setup_struct_value(t_dblist *map, t_three_int *three_int)
@@ -105,7 +94,6 @@ static int	check_map_validity(int fd, int i, struct s_dblist *map, struct s_thre
 		while (line[i] && line[i] != '\n')
 		{
 			setup_map_struct(map, three_int, line[i]);
-			printf("lsttt %p", map->first->next);
 			three_int->x++;
 			i++;
 		}
@@ -131,8 +119,6 @@ void	map_loader(char *file, struct s_dblist *map)
 	check_ber(file);
 	fd = open(file, O_RDONLY);
 	fd = check_map_validity(fd, 0, map, &three_int);
-	/*printf("salut %p", map->last);
-	printf("salut %p\n", map->first->next);*/
 	test_parcour(map);
 	map->mlx = mlx_init(three_int.size * 64, three_int.y * 64, "test", true);
 	if (fd != 1)
