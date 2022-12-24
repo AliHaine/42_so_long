@@ -4,8 +4,10 @@ CFLAGS = -Wall -Werror -Wextra
 SRCS =	so_long.c \
 		srcs/msg_manager.c \
 		srcs/map_manager.c \
+		srcs/key_manager.c \
+		srcs/game_manager.c \
 		utils/basical.c \
-		utils/free_manager.c \
+		utils/struct_utils.c \
 		utils/get_next_line/get_next_line.c \
 		utils/get_next_line/get_next_line_utils.c
 INC	= -I ../MLX42/include

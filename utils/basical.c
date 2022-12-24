@@ -1,5 +1,24 @@
 #include "../so_long.h"
 
+void	free_map(struct s_core *core)
+{
+	t_map *to_free = core->first;
+
+	while (to_free)
+	{
+		if (to_free->next != NULL)
+		{
+			to_free = to_free->next;
+			free(to_free->prev);
+		}
+		else
+		{
+			free(to_free);
+			return ;
+		}
+	}
+}
+
 void	check_ber(char *file)
 {
 	int	i;

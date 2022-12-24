@@ -1,50 +1,68 @@
 #include "../so_long.h"
 
-void test_parcour(t_dblist *s)
+void test_parcour(struct s_core *s)
 {
-	printf("//%p//", s->last->prev->prev);
 	t_map *pelem = s->last;
 	while(pelem)
 	{
-		printf("%p", pelem);
-		printf(" %c", pelem->map_value.content);
-		printf(" %d", pelem->map_value.x);
-		printf(" %d\n", pelem->map_value.y);
+		printf("\nActu %p ", pelem);
+		printf("Top %p ", pelem->top);
+		printf("Prev %p ", pelem->prev);
+		printf("Next %p ", pelem->next);
+		printf("bot %p", pelem->bot);
 		pelem = pelem->prev;
 	}
 }
 
-/*static void start_mlx(mlx_t mlx, t_dblist map)
+static int	set_content_to_map(struct s_map *map, int content, struct s_core *core)
 {
+	static int exit = 0;
+	static int player = 0;
 
-}*/
-
-static int	set_content_to_map(struct s_map *map, int content, struct s_dblist *controler)
-{
 	if (content == '0')
 	{
-		/*mlx_load_png("../assets/forest_v1.3/forest_.png");
 		map->map_value.content = '0';
-		map->map_value.img = mlx_new_image(controler->mlx, 128, 128);
-		map->map_value.texture = mlx_load_png("../assets/forest_v1.3/forest_.png");
-		mlx_image_to_window(controler->mlx, mlx_texture_to_image(controler->mlx, map->map_value.texture), 0, 0);*/
+		map->map_value.acces = 0;
 	}
 	else if (content == '1')
-	{
-		map->map_value.content = '0';
-	}
+		map->map_value.content = '1';
 	else if (content == 'C')
-	{
 		map->map_value.content = 'C';
-	}
 	else if (content == 'E')
 	{
 		map->map_value.content = 'E';
+		if (exit == 0)
+			exit++;
+		else
+		{
+			print_enum_msg(ERROR_EXIT_TOHIGH);
+			return (0);
+		}
 	}
 	else if (content == 'P')
 	{
-		controler->pos = map;
+		core->pos = map;
 		map->map_value.content = 'P';
+		if (player == 0)
+			player++;
+		else
+		{
+			print_enum_msg(ERROR_MAP);
+			return (0);
+		}
+	}
+	else if (content == 'Z')
+	{
+		if (player == 0)
+		{
+			print_enum_msg(ERROR_NO_PLAYER);
+			return (0);
+		}
+		else if (exit == 0)
+		{
+			print_enum_msg(ERROR_NO_EXIT);
+			return (0);
+		}
 	}
 	else
 	{
@@ -54,38 +72,34 @@ static int	set_content_to_map(struct s_map *map, int content, struct s_dblist *c
 	return (1);
 }
 
-static void setup_map_struct(struct s_dblist *map, struct s_three_int *three_int, int content)
+static int setup_map_struct_value(struct s_core *core, struct s_three_int *three_int, int content)
 {
 	struct s_map *nouv = malloc(sizeof(*nouv));
 	if(!nouv)
-		return ;
+		return (0);
 	nouv->map_value.x = three_int->x;
 	nouv->map_value.y = three_int->y;
-	if (set_content_to_map(nouv, content, map) == 0)
-	{
-		free_map(map);
-		exit(0);
-	}
 	nouv->map_value.content = content;
-	nouv->prev = (*map).last;
+	nouv->map_value.acces = 1;
+	//et si entoure ennemis ?
+	if (set_content_to_map(nouv, content, core) == 0)
+		return (0);
+	nouv->prev = (*core).last;
 	nouv->next = NULL;
-	if((*map).last)
-		(*map).last->next = nouv;
+	nouv->bot = NULL;
+	if (three_int->y == 0)
+		nouv->top = NULL;
 	else
-		(*map).first = nouv;
-	(*map).last = nouv;
+		set_tb_struct(nouv, three_int->size);
+	if((*core).last)
+		(*core).last->next = nouv;
+	else
+		(*core).first = nouv;
+	(*core).last = nouv;
+	return (1);
 }
 
-static void	setup_struct_value(t_dblist *map, t_three_int *three_int)
-{
-	map->first = NULL;
-	map->last = NULL;
-	three_int->x = 0;
-	three_int->y = 0;
-	three_int->size = 0;
-}
-
-static int	check_map_validity(int fd, int i, struct s_dblist *map, struct s_three_int *three_int)
+static int	check_map_validity(int fd, int i, struct s_core *core, struct s_three_int *three_int)
 {
 	char	*line;
 
@@ -93,7 +107,8 @@ static int	check_map_validity(int fd, int i, struct s_dblist *map, struct s_thre
 	{
 		while (line[i] && line[i] != '\n')
 		{
-			setup_map_struct(map, three_int, line[i]);
+			if (setup_map_struct_value(core, three_int, line[i]) == 0)
+				return (0);
 			three_int->x++;
 			i++;
 		}
@@ -105,22 +120,24 @@ static int	check_map_validity(int fd, int i, struct s_dblist *map, struct s_thre
 		three_int->y++;
 		i = 0;
 	}
-	map->last->next = NULL;
-	//***mlx = mlx_init(three_int.size * 100, three_int.y * 100, "test", true);
+	core->last->next = NULL;
+	core->last->bot = NULL;
+	if (set_content_to_map(NULL, 'Z', core) == 0)
+		return (0);
 	return (1);
 }
 
-void	map_loader(char *file, struct s_dblist *map)
+void	map_loader(char *file, struct s_core *core)
 {
 	int	fd;
 	t_three_int	three_int;
 
-	setup_struct_value(map, &three_int);
+	setup_struct_value(core, &three_int);
 	check_ber(file);
 	fd = open(file, O_RDONLY);
-	fd = check_map_validity(fd, 0, map, &three_int);
-	test_parcour(map);
-	map->mlx = mlx_init(three_int.size * 64, three_int.y * 64, "test", true);
+	fd = check_map_validity(fd, 0, core, &three_int);
 	if (fd != 1)
 		exit(0);
+	test_parcour(core);
+	core->mlx = mlx_init(three_int.size, three_int.y, "test", false);
 }
