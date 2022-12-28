@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   so_long.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ayagmur <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/12/28 17:20:49 by ayagmur           #+#    #+#             */
+/*   Updated: 2022/12/28 17:20:52 by ayagmur          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef SO_LONG_H
 # define SO_LONG_H
@@ -24,41 +35,40 @@ typedef enum MSG
 
 typedef struct s_map_value
 {
-	short	exit;
-	int		content;
-	int		x;
-	int		y;
-	short	acces;
-	mlx_image_t	*img;
-	mlx_texture_t *texture;
-} t_map_value;
+	short			exit;
+	int				content;
+	int				x;
+	int				y;
+	short			acces;
+	mlx_image_t		*img;
+	mlx_texture_t	*texture;
+}	t_map_value;
 
 typedef struct s_map
 {
-	struct s_map_value map_value;
-	struct s_map *prev;
-	struct s_map *next;
-	struct s_map *top;
-	struct s_map *bot;
-} t_map;
+	struct s_map_value	map_value;
+	struct s_map		*prev;
+	struct s_map		*next;
+	struct s_map		*top;
+	struct s_map		*bot;
+}	t_map;
 
 typedef struct s_core
 {
-	mlx_t		*mlx;
-	struct s_map *first;
-	struct s_map *last;
-	struct s_map *pos;
-	int consumable;
-} t_core;
+	mlx_t			*mlx;
+	struct s_map	*first;
+	struct s_map	*last;
+	struct s_map	*pos;
+	int				consumable;
+}	t_core;
 
 typedef struct s_three_int
 {
-	int x;
-	int y;
-	int size;
-} t_three_int;
+	int	x;
+	int	y;
+	int	size;
+}	t_three_int;
 
-int		ft_strchr(const char *str, int strchar);
 int		ft_putstr(char *str);
 int		print_enum_msg(enum MSG id);
 void	map_loader(char *file, struct s_core *map);
@@ -68,8 +78,7 @@ int		check_content(int content, struct s_core *core);
 void	free_struct(struct s_core *core);
 void	key_event(void *core);
 void	set_tb_struct(struct s_map *map, int size);
-void	setup_struct_value(struct s_core *core, t_three_int *three_int);
-void	setup_threeint_value(t_three_int *three_int);
+void	setup_struct_value(struct s_map *map, int x, int y, int c);
 void	game_loader(struct s_core *core);
 
 #endif

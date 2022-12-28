@@ -1,50 +1,60 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map_manager.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ayagmur <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/12/28 17:03:43 by ayagmur           #+#    #+#             */
+/*   Updated: 2022/12/28 17:03:49 by ayagmur          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../so_long.h"
 
-static int	set_content_to_map(struct s_map *map, int content, struct s_core *core)
+static int	set_content_to_map(struct s_map *map, int c, struct s_core *core)
 {
-	if (content == '0')
+	if (c == '0')
 	{
 		map->map_value.content = '0';
 		map->map_value.acces = 0;
 	}
-	else if (content == '1')
+	else if (c == '1')
 		map->map_value.content = '1';
-	else if (content == 'C')
+	else if (c == 'C')
 		map->map_value.content = 'C';
-	else if (content == 'E')
+	else if (c == 'E')
 		map->map_value.content = 'E';
-	else if (content == 'P')
+	else if (c == 'P')
 	{
 		core->pos = map;
 		map->map_value.content = 'P';
 	}
 	else
 		return (print_enum_msg(ERROR_MAP));
-	return (check_content(content, core));
+	return (check_content(c, core));
 }
 
-static int setup_map_struct_value(struct s_core *core, struct s_three_int *three_int, int content)
+static int	setup_map_sval(struct s_core *core, struct s_three_int *ti, int c)
 {
-	struct s_map *nouv = malloc(sizeof(*nouv));
-	if(!nouv)
+	struct s_map	*nouv;
+
+	nouv = malloc(sizeof(*nouv));
+	if (!nouv)
 		return (0);
-	nouv->map_value.x = three_int->x;
-	nouv->map_value.y = three_int->y;
-	nouv->map_value.content = content;
-	nouv->map_value.acces = 1;
-	//et si entoure ennemis ?
-	if (set_content_to_map(nouv, content, core) == 0)
+	setup_struct_value(nouv, ti->x, ti->y, c);
+	if (set_content_to_map(nouv, c, core) == 0)
 		return (0);
 	nouv->prev = (*core).last;
 	nouv->next = NULL;
 	nouv->bot = NULL;
-	if (check_wall(nouv, three_int, three_int->x + 1) == 0)
+	if (check_wall(nouv, ti, ti->x + 1) == 0)
 		free_struct(core);
-	if (three_int->y == 0)
+	if (ti->y == 0)
 		nouv->top = NULL;
 	else
-		set_tb_struct(nouv, three_int->size);
-	if((*core).last)
+		set_tb_struct(nouv, ti->size);
+	if ((*core).last)
 		(*core).last->next = nouv;
 	else
 		(*core).first = nouv;
@@ -52,43 +62,51 @@ static int setup_map_struct_value(struct s_core *core, struct s_three_int *three
 	return (1);
 }
 
-static int	check_map_validity(int fd, int i, struct s_core *core, struct s_three_int *three_int)
+static int	check_map_val(int fd, int i, t_core *core, t_three_int *ti)
 {
 	char	*line;
 
-	while ((line = get_next_line(fd)) != 0)
+	while (1)
 	{
+		line = get_next_line(fd);
+		if (line == NULL)
+			break ;
 		while (line[i] && line[i] != '\n')
 		{
-			if (setup_map_struct_value(core, three_int, line[i]) == 0)
+			if (setup_map_sval(core, ti, line[i]) == 0)
 				return (0);
-			three_int->x++;
+			ti->x++;
 			i++;
 		}
-		if (three_int->size == 0)
-			three_int->size = three_int->x;
-		else if (three_int->size != three_int->x)
+		if (ti->size == 0)
+			ti->size = ti->x;
+		else if (ti->size != ti->x)
 			return (print_enum_msg(ERROR_MAP));
-		three_int->x = 0;
-		three_int->y++;
+		ti->x = 0;
+		ti->y++;
 		i = 0;
 	}
-	core->last->next = NULL;
-	core->last->bot = NULL;
-	//if (set_content_to_map(NULL, 'Z', core) == 0)
-	return (check_content('Z', core));
+	if (check_content('Z', core) == 0 || check_content('T', core) == 0)
+		return (0);
+	return (1);
 }
 
 void	map_loader(char *file, struct s_core *core)
 {
-	int	fd;
+	int			fd;
 	t_three_int	three_int;
 
-	setup_struct_value(core, &three_int);
+	core->first = NULL;
+	core->last = NULL;
+	three_int.x = 0;
+	three_int.y = 0;
+	three_int.size = 0;
 	check_ber(file);
 	fd = open(file, O_RDONLY);
-	fd = check_map_validity(fd, 0, core, &three_int);
+	fd = check_map_val(fd, 0, core, &three_int);
 	if (fd != 1)
 		free_struct(core);
+	core->last->next = NULL;
+	core->last->bot = NULL;
 	core->mlx = mlx_init(three_int.size * 64, three_int.y * 64, "test", false);
 }

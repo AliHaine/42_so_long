@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   basical.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ayagmur <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/12/28 17:05:06 by ayagmur           #+#    #+#             */
+/*   Updated: 2022/12/28 17:05:07 by ayagmur          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../so_long.h"
 
 static int	check_content_pe(int content)
 {
-	static int exit = 0;
-	static int player = 0;
+	static int	exit = 0;
+	static int	player = 0;
 
 	if (content == 'E')
 	{
@@ -31,27 +43,45 @@ static int	check_content_pe(int content)
 
 int	check_content(int content, struct s_core *core)
 {
+	t_map	*mc;
+
 	if (content == '0' || content == '1' || content == 'X')
 		return (1);
 	else if (content == 'C')
 		core->consumable++;
 	else if (content == 'E' || content == 'P' || content == 'Z')
 		return (check_content_pe(content));
+	else if (content == 'T')
+	{
+		mc = core->last;
+		while (mc->bot == NULL)
+		{
+			if (mc->map_value.content != '0')
+				return (print_enum_msg(ERROR_NO_WALL));
+			mc = mc->prev;
+		}
+	}
 	else
 		return (print_enum_msg(ERROR_MAP));
 	return (1);
 }
 
-int	check_wall(struct s_map *map, struct s_three_int *three_int, int x) {
-	if (three_int->y == 0) {
+int	check_wall(struct s_map *map, struct s_three_int *three_int, int x)
+{
+	if (three_int->y == 0)
+	{
 		if (map->map_value.content != '0')
-			return print_enum_msg(ERROR_NO_WALL);
-	} else if (three_int->x == 0 && map->prev->map_value.y != map->map_value.y) {
+			return (print_enum_msg(ERROR_NO_WALL));
+	}
+	else if (three_int->x == 0 && map->prev->map_value.y != map->map_value.y)
+	{
 		if (map->map_value.content != '0')
-			return print_enum_msg(ERROR_NO_WALL);
-	} else if (x == three_int->size) {
+			return (print_enum_msg(ERROR_NO_WALL));
+	}
+	else if (x == three_int->size)
+	{
 		if (map->map_value.content != '0')
-			return print_enum_msg(ERROR_NO_WALL);
+			return (print_enum_msg(ERROR_NO_WALL));
 	}
 	return (1);
 }
@@ -63,7 +93,8 @@ void	check_ber(char *file)
 	i = 0;
 	while (file[i])
 		i++;
-	if (file[i - 1] == 'r' && file[i - 2] == 'e' && file[i - 3] == 'b' && file[i - 4] == '.')
+	if (file[i - 1] == 'r' && file[i - 2] == 'e'
+		&& file[i - 3] == 'b' && file[i - 4] == '.')
 		return ;
 	print_enum_msg(ERROR_MAP);
 	exit(0);
