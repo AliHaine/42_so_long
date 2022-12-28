@@ -16,6 +16,8 @@ int	print_enum_msg(enum MSG id)
 		return(ft_putstr("Une erreur est survenue, il y plus d'une sortie dans la map"));
 	else if (id == ERROR_NO_EXIT)
 		return(ft_putstr("Une erreur est survenue, il n'y a aucune sortie dans la map"));
+	else if (id == ERROR_NO_WALL)
+		return(ft_putstr("Une erreur est survenue, la map n'est pas correctement fermé"));
 	else
 		return(ft_putstr("Le message spécifié n'est pas répertorié"));
 }
@@ -30,5 +32,5 @@ int	ft_putstr(char *str)
 		write(1, &str[i], 1);
 		i++;
 	}
-	return (1);
+	return (0);
 }

@@ -18,8 +18,9 @@ typedef enum MSG
 	ERROR_PLAYER_TOHIGH,
 	ERROR_NO_PLAYER,
 	ERROR_EXIT_TOHIGH,
-	ERROR_NO_EXIT
-} msg;
+	ERROR_NO_EXIT,
+	ERROR_NO_WALL
+}	t_msg;
 
 typedef struct s_map_value
 {
@@ -47,6 +48,7 @@ typedef struct s_core
 	struct s_map *first;
 	struct s_map *last;
 	struct s_map *pos;
+	int consumable;
 } t_core;
 
 typedef struct s_three_int
@@ -61,10 +63,13 @@ int		ft_putstr(char *str);
 int		print_enum_msg(enum MSG id);
 void	map_loader(char *file, struct s_core *map);
 void	check_ber(char *file);
-void	free_map(struct s_core *map);
+int		check_wall(struct s_map *map, struct s_three_int *three_int, int x);
+int		check_content(int content, struct s_core *core);
+void	free_struct(struct s_core *core);
 void	key_event(void *core);
 void	set_tb_struct(struct s_map *map, int size);
 void	setup_struct_value(struct s_core *core, t_three_int *three_int);
+void	setup_threeint_value(t_three_int *three_int);
 void	game_loader(struct s_core *core);
 
 #endif

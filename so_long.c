@@ -25,18 +25,19 @@ int	main(int argc, char *argv[])
 {
 	struct s_core	core;
 
+	(void)argc;
+
 	map_loader(argv[1], &core);
 	game_loader(&core);
-	printf("this = %p", core.mlx);
-	g_img = mlx_new_image(core.mlx, 64, 64);
-	memset(g_img->pixels, 255, g_img->width * g_img->height * sizeof(int));
-	mlx_image_to_window(core.mlx, g_img, core.pos->map_value.x * 64, core.pos->map_value.y * 64);
-	core.pos->map_value.img = g_img;
-	mlx_loop_hook(core.mlx, &key_event, &core.mlx);
+	//g_img = mlx_new_image(core.mlx, 64, 64);
+	//memset(g_img->pixels, 255, g_img->width * g_img->height * sizeof(int));
+	//mlx_image_to_window(core.mlx, g_img, core.pos->map_value.x * 64, core.pos->map_value.y * 64);
+	//core.pos->map_value.img = g_img;
+	//mlx_loop_hook(core.mlx, &key_event, &core.mlx);
 	mlx_loop(core.mlx);
 	mlx_terminate(core.mlx);
-	if (argc != 2)
-		return(print_enum_msg(ERROR_ARGS_NUMBER));
+	//if (argc != 2)
+	//	return(print_enum_msg(ERROR_ARGS_NUMBER));
 
 	return (0);
 }

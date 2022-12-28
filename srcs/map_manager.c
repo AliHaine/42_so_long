@@ -1,24 +1,7 @@
 #include "../so_long.h"
 
-void test_parcour(struct s_core *s)
-{
-	t_map *pelem = s->last;
-	while(pelem)
-	{
-		printf("\nActu %p ", pelem);
-		printf("Top %p ", pelem->top);
-		printf("Prev %p ", pelem->prev);
-		printf("Next %p ", pelem->next);
-		printf("bot %p", pelem->bot);
-		pelem = pelem->prev;
-	}
-}
-
 static int	set_content_to_map(struct s_map *map, int content, struct s_core *core)
 {
-	static int exit = 0;
-	static int player = 0;
-
 	if (content == '0')
 	{
 		map->map_value.content = '0';
@@ -29,47 +12,15 @@ static int	set_content_to_map(struct s_map *map, int content, struct s_core *cor
 	else if (content == 'C')
 		map->map_value.content = 'C';
 	else if (content == 'E')
-	{
 		map->map_value.content = 'E';
-		if (exit == 0)
-			exit++;
-		else
-		{
-			print_enum_msg(ERROR_EXIT_TOHIGH);
-			return (0);
-		}
-	}
 	else if (content == 'P')
 	{
 		core->pos = map;
 		map->map_value.content = 'P';
-		if (player == 0)
-			player++;
-		else
-		{
-			print_enum_msg(ERROR_MAP);
-			return (0);
-		}
-	}
-	else if (content == 'Z')
-	{
-		if (player == 0)
-		{
-			print_enum_msg(ERROR_NO_PLAYER);
-			return (0);
-		}
-		else if (exit == 0)
-		{
-			print_enum_msg(ERROR_NO_EXIT);
-			return (0);
-		}
 	}
 	else
-	{
-		print_enum_msg(ERROR_MAP);
-		return (0);
-	}
-	return (1);
+		return (print_enum_msg(ERROR_MAP));
+	return (check_content(content, core));
 }
 
 static int setup_map_struct_value(struct s_core *core, struct s_three_int *three_int, int content)
@@ -87,6 +38,8 @@ static int setup_map_struct_value(struct s_core *core, struct s_three_int *three
 	nouv->prev = (*core).last;
 	nouv->next = NULL;
 	nouv->bot = NULL;
+	if (check_wall(nouv, three_int, three_int->x + 1) == 0)
+		free_struct(core);
 	if (three_int->y == 0)
 		nouv->top = NULL;
 	else
@@ -122,9 +75,8 @@ static int	check_map_validity(int fd, int i, struct s_core *core, struct s_three
 	}
 	core->last->next = NULL;
 	core->last->bot = NULL;
-	if (set_content_to_map(NULL, 'Z', core) == 0)
-		return (0);
-	return (1);
+	//if (set_content_to_map(NULL, 'Z', core) == 0)
+	return (check_content('Z', core));
 }
 
 void	map_loader(char *file, struct s_core *core)
@@ -137,7 +89,6 @@ void	map_loader(char *file, struct s_core *core)
 	fd = open(file, O_RDONLY);
 	fd = check_map_validity(fd, 0, core, &three_int);
 	if (fd != 1)
-		exit(0);
-	test_parcour(core);
-	core->mlx = mlx_init(three_int.size, three_int.y, "test", false);
+		free_struct(core);
+	core->mlx = mlx_init(three_int.size * 64, three_int.y * 64, "test", false);
 }
