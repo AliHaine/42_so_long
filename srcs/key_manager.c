@@ -14,7 +14,6 @@
 
 void	hit_emma(t_map *map, mlx_t *mlx)
 {
-	printf("%d\n", map->map_value.acces);
 	if (map->map_value.acces <= 2)
 	{
 		map->map_value.texture = mlx_load_png("./assets/characters/e_1.png");
@@ -29,6 +28,7 @@ void	hit_emma(t_map *map, mlx_t *mlx)
 		map->map_value.texture = mlx_load_png("./assets/deco/w.png");
 		map->map_value.img = mlx_texture_to_image(mlx, map->map_value.texture);
 		mlx_image_to_window(mlx, map->map_value.img, map->map_value.x * S, map->map_value.y * S);
+		map->map_value.content = '1';
 		return ;
 	}
 	map->map_value.acces++;
@@ -40,21 +40,13 @@ void	hit_emma(t_map *map, mlx_t *mlx)
 void	is_emma(t_core *core)
 {
 	if (core->pos->map->next->map_value.content == 'M')
-	{
 		hit_emma(core->pos->map->next, core->mlx);
-	}
 	else if (core->pos->map->prev->map_value.content == 'M')
-	{
 		hit_emma(core->pos->map->prev, core->mlx);
-	}
 	else if (core->pos->map->bot->map_value.content == 'M')
-	{
 		hit_emma(core->pos->map->bot, core->mlx);
-	}
 	else if (core->pos->map->top->map_value.content == 'M')
-	{
 		hit_emma(core->pos->map->top, core->mlx);
-	}
 }
 
 int	launch_animation(t_core *core, int *boul)
@@ -88,6 +80,11 @@ static void	move_event(struct s_core *core)
 			exit(1);
 		else if (core->pos->map->top->map_value.content != '0')
 		{
+			if (core->pos->map->top->map_value.content == 'C')
+			{
+				core->consumable--;
+				mlx_delete_image(core->mlx, core->pos->map->top->map_value.img);
+			}
 			core->pos->img->instances[0].y -= S;
 			core->pos->map = core->pos->map->top;
 			core->pos->map->map_value.content = '1';
@@ -101,6 +98,11 @@ static void	move_event(struct s_core *core)
 			exit(1);
 		else if (core->pos->map->bot->map_value.content != '0')
 		{
+			if (core->pos->map->bot->map_value.content == 'C')
+			{
+				core->consumable--;
+				mlx_delete_image(core->mlx, core->pos->map->bot->map_value.img);
+			}
 			core->pos->img->instances[0].y += S;
 			core->pos->map->map_value.content = '1';
 			core->pos->map = core->pos->map->bot;
@@ -113,6 +115,11 @@ static void	move_event(struct s_core *core)
 			exit(1);
 		else if (core->pos->map->prev->map_value.content != '0')
 		{
+			if (core->pos->map->prev->map_value.content == 'C')
+			{
+				core->consumable--;
+				mlx_delete_image(core->mlx, core->pos->map->prev->map_value.img);
+			}
 			core->pos->img->instances[0].x -= S;
 			core->pos->map->map_value.content = '1';
 			core->pos->map = core->pos->map->prev;
@@ -125,6 +132,11 @@ static void	move_event(struct s_core *core)
 			exit(1);
 		else if (core->pos->map->next->map_value.content != '0')
 		{
+			if (core->pos->map->next->map_value.content == 'C')
+			{
+				core->consumable--;
+				mlx_delete_image(core->mlx, core->pos->map->next->map_value.img);
+			}
 			core->pos->img->instances[0].x += S;
 			core->pos->map->map_value.content = '1';
 			core->pos->map = core->pos->map->next;

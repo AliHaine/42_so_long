@@ -12,10 +12,34 @@
 
 #include "../so_long.h"
 
-/*display_level(struct s_map *map)
+void	display_level(void *mv, mlx_t *mlx)
 {
-	void;
-}*/
+	if (((t_map_value *)mv)->content == '0')
+		((t_map_value *)mv)->texture = mlx_load_png("./assets/deco/g.png");
+	else if (((t_map_value *)mv)->content == '1')
+		((t_map_value *)mv)->texture = mlx_load_png("./assets/deco/w.png");
+	else if (((t_map_value *)mv)->content == 'C')
+		((t_map_value *)mv)->texture = mlx_load_png("./assets/items/g_gem.png");
+	else if (((t_map_value *)mv)->content == 'E')
+	{
+		((t_map_value *) mv)->texture = mlx_load_png("./assets/items/e.png");
+		((t_map_value *)mv)->img = mlx_texture_to_image(mlx, ((t_map_value *)mv)->texture);
+		mlx_image_to_window(mlx, ((t_map_value *)mv)->img, ((t_map_value *)mv)->x * S, ((t_map_value *)mv)->y * S);
+		((t_map_value *)mv)->img->enabled = 0;
+		return ;
+	}
+	else if (((t_map_value *)mv)->content == 'M')
+		((t_map_value *)mv)->texture = mlx_load_png("./assets/characters/e_0.png");
+	else if (((t_player *)mv)->map->map_value.content == 'P')
+	{
+		((t_player *) mv)->texture = mlx_load_png("./assets/characters/p_0.png");
+		((t_player *)mv)->img = mlx_texture_to_image(mlx, ((t_player *)mv)->texture);
+		mlx_image_to_window(mlx, ((t_player *)mv)->img, ((t_player *)mv)->map->map_value.x * S, ((t_player *)mv)->map->map_value.y * S);
+		return ;
+	}
+	((t_map_value *)mv)->img = mlx_texture_to_image(mlx, ((t_map_value *)mv)->texture);
+	mlx_image_to_window(mlx, ((t_map_value *)mv)->img, ((t_map_value *)mv)->x * S, ((t_map_value *)mv)->y * S);
+}
 
 void	load_img(void *mv, mlx_t *mlx)
 {
@@ -26,7 +50,7 @@ void	load_img(void *mv, mlx_t *mlx)
 	else if (((t_map_value *)mv)->content == 'C')
 		((t_map_value *)mv)->texture = mlx_load_png("./assets/items/g_gem.png");
 	else if (((t_map_value *)mv)->content == 'E')
-		((t_map_value *)mv)->texture = mlx_load_png("./assets/items/g_gem.png");
+		((t_map_value *)mv)->texture = mlx_load_png("./assets/items/e.png");
 	else if (((t_map_value *)mv)->content == 'M')
 		((t_map_value *)mv)->texture = mlx_load_png("./assets/characters/e_0.png");
 	else if (((t_player *)mv)->map->map_value.content == 'P')
@@ -61,27 +85,12 @@ static void setup_map_struct_img(struct s_map *map, struct s_core *core)
 					e++;
 				else if (map->map_value.content == 'C')
 					c++;
-				load_img(&map->map_value, core->mlx);
+				display_level(&map->map_value, core->mlx);
 			}
 		}
 		else
-			load_img(&map->map_value, core->mlx);
+			display_level(&map->map_value, core->mlx);
 		map = map->next;
-	}
-}
-
-void test_parcour(struct s_core *s)
-{
-	t_map *pelem = s->last;
-	while(pelem)
-	{
-		printf("content %c ", pelem->map_value.content);
-		printf("x %d ", pelem->map_value.x);
-		printf("y %d\n", pelem->map_value.y);
-		printf("prev content %c ", pelem->prev->map_value.content);
-		printf("x %d ", pelem->prev->map_value.x);
-		printf("y %d\n", pelem->prev->map_value.y);
-		pelem = pelem->prev;
 	}
 }
 
@@ -89,6 +98,11 @@ void	game_loader(struct s_core *core)
 {
 	//test_parcour(core);
 	setup_map_struct_img(core->first, core);
+	if (core->consumable == 0) {
+		core->exit->map_value.img->enabled = 1;
+	}
+	printf("exx%p\n", core->exit);
+	printf("poi%p\n", core->pos);
 	load_img(core->pos, core->mlx);
 	//key_event(NULL, core);
 

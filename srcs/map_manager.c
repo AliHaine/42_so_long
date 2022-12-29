@@ -16,7 +16,6 @@ static int	set_content_to_map(struct s_map *map, int c, struct s_core *core)
 {
 	t_player *p;
 
-	p = malloc(sizeof(t_player));
 	if (c == '0')
 	{
 		map->map_value.content = '0';
@@ -27,14 +26,19 @@ static int	set_content_to_map(struct s_map *map, int c, struct s_core *core)
 	else if (c == 'C')
 		map->map_value.content = 'C';
 	else if (c == 'E')
+	{
 		map->map_value.content = 'E';
+		core->exit = map;
+	}
 	else if (c == 'M')
 		map->map_value.content = 'M';
 	else if (c == 'P')
 	{
+		p = malloc(sizeof(t_player));
 		map->map_value.content = 'P';
 		p->map = map;
 		core->pos = p;
+		//printf("tt%p\n", core->pos);
 	}
 	else
 		return (print_enum_msg(ERROR_MAP));
@@ -104,6 +108,8 @@ void	map_loader(char *file, struct s_core *core)
 
 	core->first = NULL;
 	core->last = NULL;
+	core->pos = NULL;
+	core->consumable = 0;
 	three_int.x = 0;
 	three_int.y = 0;
 	three_int.size = 0;
