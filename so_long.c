@@ -6,7 +6,7 @@
 /*   By: ayagmur <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 17:02:52 by ayagmur           #+#    #+#             */
-/*   Updated: 2022/12/28 17:03:01 by ayagmur          ###   ########.fr       */
+/*   Updated: 2022/12/29 17:26:12 by ayagmur          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,12 @@ int	main(int argc, char *argv[])
 
 	map_loader(argv[1], &core);
 	game_loader(&core);
-	//g_img = mlx_new_image(core.mlx, 64, 64);
+	//g_img = mlx_new_image(core.mlx, S, S);
 	//memset(g_img->pixels, 255, g_img->width * g_img->height * sizeof(int));
-	//mlx_image_to_window(core.mlx, g_img, core.pos->map_value.x * 64, core.pos->map_value.y * 64);
+	//mlx_image_to_window(core.mlx, g_img, core.pos->map_value.x * S, core.pos->map_value.y * S);
 	//core.pos->map_value.img = g_img;
-	mlx_loop_hook(core.mlx, &key_event, &core.mlx);
+	mlx_key_hook(core.mlx, &key_event, &core.mlx);
+	mlx_loop_hook(core.mlx, &loop_event, &core.mlx);
 	mlx_loop(core.mlx);
 	mlx_terminate(core.mlx);
 	//if (argc != 2)

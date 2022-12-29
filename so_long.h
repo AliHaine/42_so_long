@@ -20,6 +20,7 @@
 # include <fcntl.h>
 # include <stdio.h>
 # include "utils/get_next_line/get_next_line.h"
+# define S 64
 
 typedef enum MSG
 {
@@ -57,6 +58,7 @@ typedef struct s_player
 {
 	struct s_map		*map;
 	int 				movenbr;
+	int 				dir;
 	mlx_image_t			*img;
 	mlx_texture_t		*texture;
 }	t_player;
@@ -84,10 +86,12 @@ void	check_ber(char *file);
 int		check_wall(struct s_map *map, struct s_three_int *three_int, int x);
 int		check_content(int content, struct s_core *core);
 void	free_struct(struct s_core *core);
-void	key_event(void *core);
+void	key_event(mlx_key_data_t key_data, void *core);
+void	loop_event(void *core);
 void	set_tb_struct(struct s_map *map, int size);
 void	setup_struct_value(struct s_map *map, int x, int y, int c);
 void	game_loader(struct s_core *core);
 void	load_img(void *mv, mlx_t *mlx);
+void	my_sleep(double nb);
 
 #endif

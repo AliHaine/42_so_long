@@ -28,6 +28,8 @@ static int	set_content_to_map(struct s_map *map, int c, struct s_core *core)
 		map->map_value.content = 'C';
 	else if (c == 'E')
 		map->map_value.content = 'E';
+	else if (c == 'M')
+		map->map_value.content = 'M';
 	else if (c == 'P')
 	{
 		map->map_value.content = 'P';
@@ -112,5 +114,5 @@ void	map_loader(char *file, struct s_core *core)
 		free_struct(core);
 	core->last->next = NULL;
 	core->last->bot = NULL;
-	core->mlx = mlx_init(three_int.size * 64, three_int.y * 64, "test", false);
+	core->mlx = mlx_init(three_int.size * S, three_int.y * S, "test", false);
 }

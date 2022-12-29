@@ -12,6 +12,15 @@
 
 #include "../so_long.h"
 
+void	my_sleep(double nb)
+{
+	int i;
+
+	i = 0;
+	while (i < nb * 50000000)
+		i++;
+}
+
 static int	check_content_pe(int content)
 {
 	static int	exit = 0;
@@ -45,7 +54,7 @@ int	check_content(int content, struct s_core *core)
 {
 	t_map	*mc;
 
-	if (content == '0' || content == '1' || content == 'X')
+	if (content == '0' || content == '1' || content == 'X' || content == 'M')
 		return (1);
 	else if (content == 'C')
 		core->consumable++;
