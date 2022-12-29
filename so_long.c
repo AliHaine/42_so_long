@@ -12,8 +12,6 @@
 
 #include "so_long.h"
 
-mlx_image_t	*g_img;
-
 /*
 int32_t	main(void)
 {
@@ -44,7 +42,7 @@ int	main(int argc, char *argv[])
 	//memset(g_img->pixels, 255, g_img->width * g_img->height * sizeof(int));
 	//mlx_image_to_window(core.mlx, g_img, core.pos->map_value.x * 64, core.pos->map_value.y * 64);
 	//core.pos->map_value.img = g_img;
-	//mlx_loop_hook(core.mlx, &key_event, &core.mlx);
+	mlx_loop_hook(core.mlx, &key_event, &core.mlx);
 	mlx_loop(core.mlx);
 	mlx_terminate(core.mlx);
 	//if (argc != 2)

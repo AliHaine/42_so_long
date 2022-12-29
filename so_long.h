@@ -53,12 +53,20 @@ typedef struct s_map
 	struct s_map		*bot;
 }	t_map;
 
+typedef struct s_player
+{
+	struct s_map		*map;
+	int 				movenbr;
+	mlx_image_t			*img;
+	mlx_texture_t		*texture;
+}	t_player;
+
 typedef struct s_core
 {
 	mlx_t			*mlx;
 	struct s_map	*first;
 	struct s_map	*last;
-	struct s_map	*pos;
+	struct s_player	*pos;
 	int				consumable;
 }	t_core;
 
@@ -80,5 +88,6 @@ void	key_event(void *core);
 void	set_tb_struct(struct s_map *map, int size);
 void	setup_struct_value(struct s_map *map, int x, int y, int c);
 void	game_loader(struct s_core *core);
+void	load_img(void *mv, mlx_t *mlx);
 
 #endif

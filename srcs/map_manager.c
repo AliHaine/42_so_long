@@ -14,6 +14,9 @@
 
 static int	set_content_to_map(struct s_map *map, int c, struct s_core *core)
 {
+	t_player *p;
+
+	p = malloc(sizeof(t_player));
 	if (c == '0')
 	{
 		map->map_value.content = '0';
@@ -27,8 +30,9 @@ static int	set_content_to_map(struct s_map *map, int c, struct s_core *core)
 		map->map_value.content = 'E';
 	else if (c == 'P')
 	{
-		core->pos = map;
 		map->map_value.content = 'P';
+		p->map = map;
+		core->pos = p;
 	}
 	else
 		return (print_enum_msg(ERROR_MAP));
