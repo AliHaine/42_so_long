@@ -94,5 +94,6 @@ void	setup_struct_value(struct s_map *map, int x, int y, int c);
 void	game_loader(struct s_core *core);
 void	load_img(void *mv, mlx_t *mlx);
 void	my_sleep(double nb);
+void	move_event(struct s_core *core);
 
 #endif

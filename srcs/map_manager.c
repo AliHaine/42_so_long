@@ -12,37 +12,38 @@
 
 #include "../so_long.h"
 
-static int	set_content_to_map(struct s_map *map, int c, struct s_core *core)
+static int	set_content_to_map(struct s_map *map, int co, struct s_core *core, t_three_int *t)
 {
 	t_player *p;
 
-	if (c == '0')
+	if (co == '0' || co == '1' || co == 'C' || co == 'E' || co == 'M' || co == 'P')
 	{
-		map->map_value.content = '0';
-		map->map_value.acces = 0;
-	}
-	else if (c == '1')
-		map->map_value.content = '1';
-	else if (c == 'C')
-		map->map_value.content = 'C';
-	else if (c == 'E')
-	{
-		map->map_value.content = 'E';
-		core->exit = map;
-	}
-	else if (c == 'M')
-		map->map_value.content = 'M';
-	else if (c == 'P')
-	{
-		p = malloc(sizeof(t_player));
-		map->map_value.content = 'P';
-		p->map = map;
-		core->pos = p;
-		//printf("tt%p\n", core->pos);
+		map->map_value.content = co;
+		map->map_value.x = t->x;
+		map->map_value.y = t->y;
+		map->map_value.acces = 1;
+		if (co == 'P')
+		{
+			p = malloc(sizeof(*p));
+			if (p == NULL)
+				return (0);
+			//printf("%p", p);
+			//map->map_value.content = 'P';
+			//p->map = map;
+			core->pos = p;
+			core->pos->map = map;
+			core->pos->map->map_value.content = 'P';
+		}
+		else if (co == 'E')
+			core->exit = map;
+		else if (co == '0')
+			map->map_value.acces = 0;
+		else if (co == 'C')
+			setup_struct_value(map, t->x, t->y, co);
 	}
 	else
 		return (print_enum_msg(ERROR_MAP));
-	return (check_content(c, core));
+	return (check_content(co, core));
 }
 
 static int	setup_map_sval(struct s_core *core, struct s_three_int *ti, int c)
@@ -52,9 +53,16 @@ static int	setup_map_sval(struct s_core *core, struct s_three_int *ti, int c)
 	nouv = malloc(sizeof(*nouv));
 	if (!nouv)
 		return (0);
-	setup_struct_value(nouv, ti->x, ti->y, c);
-	if (set_content_to_map(nouv, c, core) == 0)
-		return (0);
+	if (c != 'C')
+	{
+		if (set_content_to_map(nouv, c, core, ti) == 0)
+			return (0);
+	}
+	else
+	{
+		setup_struct_value(nouv, ti->x, ti->y, c);
+		core->consumable++;
+	}
 	nouv->prev = (*core).last;
 	nouv->next = NULL;
 	nouv->bot = NULL;
@@ -109,6 +117,7 @@ void	map_loader(char *file, struct s_core *core)
 	core->first = NULL;
 	core->last = NULL;
 	core->pos = NULL;
+	core->exit = NULL;
 	core->consumable = 0;
 	three_int.x = 0;
 	three_int.y = 0;
