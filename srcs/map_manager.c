@@ -12,34 +12,29 @@
 
 #include "../so_long.h"
 
-static int	set_content_to_map(struct s_map *map, int co, struct s_core *core, t_three_int *t)
+static int	set_content_to_map(t_map *map, int co, t_core *core, t_three_int *t)
 {
-	t_player *p;
+	t_player	*p;
 
-	if (co == '0' || co == '1' || co == 'C' || co == 'E' || co == 'M' || co == 'P')
+	if (co == '0' || co == '1'
+		|| co == 'E' || co == 'M' || co == 'P')
 	{
-		map->map_value.content = co;
-		map->map_value.x = t->x;
-		map->map_value.y = t->y;
+		setup_struct_value(map, t->x, t->y, co);
 		map->map_value.acces = 1;
 		if (co == 'P')
 		{
 			p = malloc(sizeof(*p));
 			if (p == NULL)
 				return (0);
-			//printf("%p", p);
-			//map->map_value.content = 'P';
-			//p->map = map;
 			core->pos = p;
 			core->pos->map = map;
 			core->pos->map->map_value.content = 'P';
+			core->pos->dir = 1;
 		}
 		else if (co == 'E')
 			core->exit = map;
 		else if (co == '0')
 			map->map_value.acces = 0;
-		else if (co == 'C')
-			setup_struct_value(map, t->x, t->y, co);
 	}
 	else
 		return (print_enum_msg(ERROR_MAP));
@@ -127,7 +122,8 @@ void	map_loader(char *file, struct s_core *core)
 	fd = check_map_val(fd, 0, core, &three_int);
 	if (fd != 1)
 		free_struct(core);
+	check_flood_fill(core);
 	core->last->next = NULL;
 	core->last->bot = NULL;
-	core->mlx = mlx_init(three_int.size * S, three_int.y * S, "test", false);
+	core->mlx = mlx_init(three_int.size * S, three_int.y * S, "test", true);
 }

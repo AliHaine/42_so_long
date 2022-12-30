@@ -14,7 +14,7 @@
 
 void	my_sleep(double nb)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < nb * 50000000)

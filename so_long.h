@@ -20,7 +20,14 @@
 # include <fcntl.h>
 # include <stdio.h>
 # include "utils/get_next_line/get_next_line.h"
+# include <stdbool.h>
+
 # define S 64
+# define WALL "./assets/deco/g.png"
+# define P_G "./assets/characters/p_01.png"
+# define P_GA "./assets/characters/p_a3.png"
+# define P_D "./assets/characters/p_0.png"
+# define P_DA "./assets/characters/p_a2.png"
 
 typedef enum MSG
 {
@@ -31,7 +38,9 @@ typedef enum MSG
 	ERROR_NO_PLAYER,
 	ERROR_EXIT_TOHIGH,
 	ERROR_NO_EXIT,
-	ERROR_NO_WALL
+	ERROR_NO_WALL,
+	ERROR_EXIT_ACCESS,
+	ERROR_CONSUM_ACCESS
 }	t_msg;
 
 typedef struct s_map_value
@@ -57,8 +66,8 @@ typedef struct s_map
 typedef struct s_player
 {
 	struct s_map		*map;
-	int 				movenbr;
-	int 				dir;
+	int					movenbr;
+	int					dir;
 	mlx_image_t			*img;
 	mlx_texture_t		*texture;
 }	t_player;
@@ -95,5 +104,7 @@ void	game_loader(struct s_core *core);
 void	load_img(void *mv, mlx_t *mlx);
 void	my_sleep(double nb);
 void	move_event(struct s_core *core);
+bool	check_exit(struct s_core *core);
+void	check_flood_fill(struct s_core *core);
 
 #endif

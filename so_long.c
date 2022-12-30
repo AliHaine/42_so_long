@@ -17,13 +17,11 @@ int	main(int argc, char *argv[])
 	struct s_core	core;
 
 	(void)argc;
-
 	map_loader(argv[1], &core);
 	game_loader(&core);
 	mlx_key_hook(core.mlx, &key_event, &core.mlx);
 	mlx_loop_hook(core.mlx, &loop_event, &core.mlx);
 	mlx_loop(core.mlx);
 	mlx_terminate(core.mlx);
-
 	return (0);
 }

@@ -14,6 +14,7 @@
 
 int	print_enum_msg(enum MSG id)
 {
+	ft_putstr("Error\n");
 	if (id == ERROR)
 		return (ft_putstr("Une erreur est survenue"));
 	else if (id == ERROR_ARGS_NUMBER)
@@ -21,15 +22,19 @@ int	print_enum_msg(enum MSG id)
 	else if (id == ERROR_MAP)
 		return (ft_putstr("Une erreur est survenue avec la carte"));
 	else if (id == ERROR_PLAYER_TOHIGH)
-		return (ft_putstr("Erreur, il y plus d'un joueur dans la map"));
+		return (ft_putstr("Il y plus d'un joueur dans la map"));
 	else if (id == ERROR_NO_PLAYER)
-		return (ft_putstr("Erreur, il n'y a aucun joueur dans la map"));
+		return (ft_putstr("Il n'y a aucun joueur dans la map"));
 	else if (id == ERROR_EXIT_TOHIGH)
-		return (ft_putstr("Erreur, il y plus d'une sortie dans la map"));
+		return (ft_putstr("Il y plus d'une sortie dans la map"));
 	else if (id == ERROR_NO_EXIT)
-		return (ft_putstr("Erreur, il n'y a aucune sortie dans la map"));
+		return (ft_putstr("Il n'y a aucune sortie dans la map"));
 	else if (id == ERROR_NO_WALL)
-		return (ft_putstr("Erreur, la map n'est pas correctement fermé"));
+		return (ft_putstr("La map n'est pas correctement fermé"));
+	else if (id == ERROR_EXIT_ACCESS)
+		return (ft_putstr("La sortie n'est pas accessible"));
+	else if (id == ERROR_CONSUM_ACCESS)
+		return (ft_putstr("Tous les consommables nsont pas accessible"));
 	else
 		return (ft_putstr("Le message spécifié n'est pas répertorié"));
 }

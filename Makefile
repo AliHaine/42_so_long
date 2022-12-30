@@ -7,6 +7,7 @@ SRCS =	so_long.c \
 		srcs/key_manager.c \
 		srcs/game_manager.c \
 		srcs/move_event.c \
+		srcs/map_utils.c \
 		utils/basical.c \
 		utils/struct_utils.c \
 		utils/get_next_line/get_next_line.c \

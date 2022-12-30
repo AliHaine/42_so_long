@@ -27,14 +27,16 @@ void	hit_emma(t_map *map, mlx_t *mlx)
 		mlx_delete_image(mlx, map->map_value.img);
 		map->map_value.texture = mlx_load_png("./assets/deco/w.png");
 		map->map_value.img = mlx_texture_to_image(mlx, map->map_value.texture);
-		mlx_image_to_window(mlx, map->map_value.img, map->map_value.x * S, map->map_value.y * S);
+		mlx_image_to_window(mlx, map->map_value.img,
+			map->map_value.x * S, map->map_value.y * S);
 		map->map_value.content = '1';
 		return ;
 	}
 	map->map_value.acces++;
 	mlx_delete_image(mlx, map->map_value.img);
 	map->map_value.img = mlx_texture_to_image(mlx, map->map_value.texture);
-	mlx_image_to_window(mlx, map->map_value.img, map->map_value.x * S, map->map_value.y * S);
+	mlx_image_to_window(mlx, map->map_value.img,
+		map->map_value.x * S, map->map_value.y * S);
 }
 
 void	is_emma(t_core *core)
@@ -49,23 +51,28 @@ void	is_emma(t_core *core)
 		hit_emma(core->pos->map->top, core->mlx);
 }
 
-int	launch_animation(t_core *core, int *boul)
+static int	launch_animation(t_core *core, int *boul, int x, int y)
 {
 	*boul *= -1;
-	if (*boul == 1) {
+	if (*boul == 1)
+	{
 		mlx_delete_image(core->mlx, core->pos->img);
-		core->pos->texture = mlx_load_png("./assets/characters/p_a2.png");
+		if (core->pos->dir == 1)
+			core->pos->texture = mlx_load_png(P_DA);
+		else
+			core->pos->texture = mlx_load_png(P_GA);
 		core->pos->img = mlx_texture_to_image(core->mlx, core->pos->texture);
-		mlx_image_to_window(core->mlx, core->pos->img, core->pos->map->map_value.x * S,
-							core->pos->map->map_value.y * S);
+		mlx_image_to_window(core->mlx, core->pos->img, x, y);
 	}
 	else
 	{
 		mlx_delete_image(core->mlx, core->pos->img);
-		core->pos->texture = mlx_load_png("./assets/characters/p_0.png");
+		if (core->pos->dir == 1)
+			core->pos->texture = mlx_load_png(P_D);
+		else
+			core->pos->texture = mlx_load_png(P_G);
 		core->pos->img = mlx_texture_to_image(core->mlx, core->pos->texture);
-		mlx_image_to_window(core->mlx, core->pos->img, core->pos->map->map_value.x * S,
-							core->pos->map->map_value.y * S);
+		mlx_image_to_window(core->mlx, core->pos->img, x, y);
 		my_sleep(1.5);
 	}
 	is_emma(core);
@@ -77,7 +84,9 @@ void	loop_event(void *core)
 	static int	boul = -1;
 
 	if (mlx_is_key_down(((t_core *)core)->mlx, MLX_KEY_SPACE))
-		launch_animation(core, &boul);
+		launch_animation(core, &boul,
+			((t_core *)core)->pos->map->map_value.x * S,
+			((t_core *)core)->pos->map->map_value.y * S);
 }
 
 void	key_event(mlx_key_data_t key_data, void *core)
