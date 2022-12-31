@@ -10,6 +10,7 @@ SRCS =	so_long.c \
 		srcs/map_utils.c \
 		utils/basical.c \
 		utils/struct_utils.c \
+		utils/ft_itoa.c \
 		utils/get_next_line/get_next_line.c \
 		utils/get_next_line/get_next_line_utils.c
 INC	= -I ../MLX42/include

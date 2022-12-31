@@ -24,6 +24,7 @@
 
 # define S 64
 # define WALL "./assets/deco/g.png"
+# define GROUND "./assets/deco/w.png"
 # define P_G "./assets/characters/p_01.png"
 # define P_GA "./assets/characters/p_a3.png"
 # define P_D "./assets/characters/p_0.png"
@@ -92,7 +93,7 @@ typedef struct s_three_int
 int		ft_putstr(char *str);
 int		print_enum_msg(enum MSG id);
 void	map_loader(char *file, struct s_core *map);
-void	check_ber(char *file);
+void	check_ber(const char *file);
 int		check_wall(struct s_map *map, struct s_three_int *three_int, int x);
 int		check_content(int content, struct s_core *core);
 void	free_struct(struct s_core *core);
@@ -106,5 +107,6 @@ void	my_sleep(double nb);
 void	move_event(struct s_core *core);
 bool	check_exit(struct s_core *core);
 void	check_flood_fill(struct s_core *core);
+char	*ft_itoa(unsigned int nb);
 
 #endif

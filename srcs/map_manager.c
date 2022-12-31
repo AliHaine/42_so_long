@@ -30,10 +30,11 @@ static int	set_content_to_map(t_map *map, int co, t_core *core, t_three_int *t)
 			core->pos->map = map;
 			core->pos->map->map_value.content = 'P';
 			core->pos->dir = 1;
+			core->pos->movenbr = 0;
 		}
 		else if (co == 'E')
 			core->exit = map;
-		else if (co == '0')
+		else if (co == '1')
 			map->map_value.acces = 0;
 	}
 	else
@@ -125,5 +126,5 @@ void	map_loader(char *file, struct s_core *core)
 	check_flood_fill(core);
 	core->last->next = NULL;
 	core->last->bot = NULL;
-	core->mlx = mlx_init(three_int.size * S, three_int.y * S, "test", true);
+	core->mlx = mlx_init(three_int.size * S, three_int.y * S, "Game", true);
 }

@@ -14,10 +14,10 @@
 
 static void	load_and_disp_img(struct s_map_value *val, mlx_t *mlx)
 {
-	if (val->content == '0')
+	if (val->content == '1')
 		val->texture = mlx_load_png(WALL);
-	else if (val->content == '1')
-		val->texture = mlx_load_png("./assets/deco/w.png");
+	else if (val->content == '0')
+		val->texture = mlx_load_png(GROUND);
 	else if (val->content == 'C')
 		val->texture = mlx_load_png("./assets/items/g_gem.png");
 	else if (val->content == 'E')
