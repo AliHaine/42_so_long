@@ -14,30 +14,15 @@
 
 void	move_up(struct s_core *core)
 {
-	if (core->pos->map->top->map_value.content == 'M')
+	if (core->pos->map->top->mv.content == 'M')
 		exit(1);
-	else if (can_goto(core->pos->map->top->map_value.content) == true)
+	else if (can_goto(core->pos->map->top->mv.content) == true)
 	{
-		if (core->pos->map->top->map_value.content == 'C')
-		{
-			core->consumable--;
-			mlx_delete_image(core->mlx, core->pos->map->top->map_value.img);
-			if (core->consumable == 0)
-				core->exit->map_value.img->instances->enabled = 1;
-		}
-		else if (core->pos->map->top->map_value.content == 'I')
-		{
-			core->pos->item++;
-			mlx_delete_image(core->mlx, core->pos->map->top->map_value.img);
-			core->pos->map->top->map_value.texture = mlx_load_png(GROUND);
-			core->pos->map->top->map_value.img = mlx_texture_to_image(core->mlx, core->pos->map->top->map_value.texture);
-			mlx_image_to_window(core->mlx, core->pos->map->top->map_value.img,
-								core->pos->map->top->map_value.x * S, core->pos->map->top->map_value.y * S);
-		}
+		i_or_c_action(core, &core->pos->map->top->mv);
 		core->pos->img->instances[0].y -= S;
-		core->pos->map->map_value.content = '0';
+		core->pos->map->mv.content = '0';
 		core->pos->map = core->pos->map->top;
-		core->pos->map->map_value.content = 'P';
+		core->pos->map->mv.content = 'P';
 		core->pos->movenbr++;
 		ft_putstr(ft_itoa(core->pos->movenbr));
 		if (check_exit(core) == 1)
@@ -47,31 +32,15 @@ void	move_up(struct s_core *core)
 
 void	move_down(struct s_core *core)
 {
-	if (core->pos->map->bot->map_value.content == 'M')
+	if (core->pos->map->bot->mv.content == 'M')
 		exit(1);
-	else if (can_goto(core->pos->map->bot->map_value.content) == true)
+	else if (can_goto(core->pos->map->bot->mv.content) == true)
 	{
-		if (core->pos->map->bot->map_value.content == 'C')
-		{
-			core->consumable--;
-			mlx_delete_image(core->mlx, core->pos->map->bot->map_value.img);
-			if (core->consumable == 0)
-				core->exit->map_value.img->instances->enabled = 1;
-		}
-		else if (core->pos->map->bot->map_value.content == 'I')
-		{
-			core->pos->item++;
-			mlx_delete_image(core->mlx, core->pos->map->bot->map_value.img);
-			core->pos->map->bot->map_value.texture = mlx_load_png(GROUND);
-			core->pos->map->bot->map_value.img = mlx_texture_to_image(core->mlx, core->pos->map->bot->map_value.texture);
-			mlx_image_to_window(core->mlx, core->pos->map->bot->map_value.img,
-								core->pos->map->bot->map_value.x * S, core->pos->map->bot->map_value.y * S);
-
-		}
+		i_or_c_action(core, &core->pos->map->bot->mv);
 		core->pos->img->instances[0].y += S;
-		core->pos->map->map_value.content = '0';
+		core->pos->map->mv.content = '0';
 		core->pos->map = core->pos->map->bot;
-		core->pos->map->map_value.content = 'P';
+		core->pos->map->mv.content = 'P';
 		core->pos->movenbr++;
 		ft_putstr(ft_itoa(core->pos->movenbr));
 		if (check_exit(core) == 1)
@@ -81,30 +50,15 @@ void	move_down(struct s_core *core)
 
 void	move_left(struct s_core *core)
 {
-	if (core->pos->map->prev->map_value.content == 'M')
+	if (core->pos->map->prev->mv.content == 'M')
 		exit(1);
-	else if (can_goto(core->pos->map->prev->map_value.content) == true)
+	else if (can_goto(core->pos->map->prev->mv.content) == true)
 	{
-		if (core->pos->map->prev->map_value.content == 'C')
-		{
-			core->consumable--;
-			mlx_delete_image(core->mlx, core->pos->map->prev->map_value.img);
-			if (core->consumable == 0)
-				core->exit->map_value.img->instances->enabled = 1;
-		}
-		else if (core->pos->map->prev->map_value.content == 'I')
-		{
-			core->pos->item++;
-			mlx_delete_image(core->mlx, core->pos->map->prev->map_value.img);
-			core->pos->map->prev->map_value.texture = mlx_load_png(GROUND);
-			core->pos->map->prev->map_value.img = mlx_texture_to_image(core->mlx, core->pos->map->prev->map_value.texture);
-			mlx_image_to_window(core->mlx, core->pos->map->prev->map_value.img,
-								core->pos->map->prev->map_value.x * S, core->pos->map->prev->map_value.y * S);
-		}
+		i_or_c_action(core, &core->pos->map->prev->mv);
 		core->pos->img->instances[0].x -= S;
-		core->pos->map->map_value.content = '0';
+		core->pos->map->mv.content = '0';
 		core->pos->map = core->pos->map->prev;
-		core->pos->map->map_value.content = 'P';
+		core->pos->map->mv.content = 'P';
 		core->pos->dir = 0;
 		mlx_delete_image(core->mlx, core->pos->img);
 		core->pos->texture = mlx_load_png(P_G);
@@ -112,7 +66,7 @@ void	move_left(struct s_core *core)
 		core->pos->movenbr++;
 		ft_putstr(ft_itoa(core->pos->movenbr));
 		mlx_image_to_window(core->mlx, core->pos->img,
-			core->pos->map->map_value.x * S, core->pos->map->map_value.y * S);
+			core->pos->map->mv.x * S, core->pos->map->mv.y * S);
 		if (check_exit(core) == 1)
 			exit(1);
 	}
@@ -120,30 +74,15 @@ void	move_left(struct s_core *core)
 
 void	move_right(struct s_core *core)
 {
-	if (core->pos->map->next->map_value.content == 'M')
+	if (core->pos->map->next->mv.content == 'M')
 		exit(1);
-	else if (can_goto(core->pos->map->next->map_value.content) == true)
+	else if (can_goto(core->pos->map->next->mv.content) == true)
 	{
-		if (core->pos->map->next->map_value.content == 'C')
-		{
-			core->consumable--;
-			mlx_delete_image(core->mlx, core->pos->map->next->map_value.img);
-			if (core->consumable == 0)
-				core->exit->map_value.img->instances->enabled = 1;
-		}
-		else if (core->pos->map->next->map_value.content == 'I')
-		{
-			core->pos->item++;
-			mlx_delete_image(core->mlx, core->pos->map->next->map_value.img);
-			core->pos->map->next->map_value.texture = mlx_load_png(GROUND);
-			core->pos->map->next->map_value.img = mlx_texture_to_image(core->mlx, core->pos->map->next->map_value.texture);
-			mlx_image_to_window(core->mlx, core->pos->map->next->map_value.img,
-								core->pos->map->next->map_value.x * S, core->pos->map->next->map_value.y * S);
-		}
+		i_or_c_action(core, &core->pos->map->next->mv);
 		core->pos->img->instances[0].x += S;
-		core->pos->map->map_value.content = '0';
+		core->pos->map->mv.content = '0';
 		core->pos->map = core->pos->map->next;
-		core->pos->map->map_value.content = 'P';
+		core->pos->map->mv.content = 'P';
 		core->pos->dir = 1;
 		mlx_delete_image(core->mlx, core->pos->img);
 		core->pos->texture = mlx_load_png(P_D);
@@ -151,7 +90,7 @@ void	move_right(struct s_core *core)
 		core->pos->movenbr++;
 		ft_putstr(ft_itoa(core->pos->movenbr));
 		mlx_image_to_window(core->mlx, core->pos->img,
-			core->pos->map->map_value.x * S, core->pos->map->map_value.y * S);
+			core->pos->map->mv.x * S, core->pos->map->mv.y * S);
 		if (check_exit(core) == 1)
 			exit(1);
 	}

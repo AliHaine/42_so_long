@@ -46,46 +46,36 @@ void	loop_event(void *core)
 
 	if (mlx_is_key_down(((t_core *)core)->mlx, MLX_KEY_SPACE))
 		launch_animation(core, &boul,
-			((t_core *)core)->pos->map->map_value.x * S,
-			((t_core *)core)->pos->map->map_value.y * S);
+			((t_core *)core)->pos->map->mv.x * S,
+			((t_core *)core)->pos->map->mv.y * S);
 }
 
 static int	build_event(struct s_core *core)
 {
-	 static int i = 0;
+	static int	i = 0;
 
-	 i++;
-	 if (i == 2)
-	 {
-		 i = 0;
-		 return (0);
-	 }
+	if (i++ == 1)
+	{
+		i = 0;
+		return (0);
+	}
 	if (core->pos->item == 0)
 		return (ft_putstr("Vous n'avez pas d'item\n"));
 	if (core->pos->dir == 1)
 	{
-		if (core->pos->map->next->map_value.content != '0')
-			return (printf("Vous ne pouvez pas build sur cette tile\n"));
-		mlx_delete_image(core->mlx, core->pos->map->next->map_value.img);
-		core->pos->map->next->map_value.texture = mlx_load_png(BLOC);
-		core->pos->map->next->map_value.img = mlx_texture_to_image(core->mlx, core->pos->map->next->map_value.texture);
-		mlx_image_to_window(core->mlx, core->pos->map->next->map_value.img,
-							core->pos->map->next->map_value.x * S, core->pos->map->next->map_value.y * S);
-		core->pos->map->next->map_value.content = 'B';
+		if (core->pos->map->next->mv.content != '0')
+			return (ft_putstr("Vous ne pouvez pas build sur cette tile\n"));
+		mlx_delete_image(core->mlx, core->pos->map->next->mv.img);
+		load_and_disp_img(core->mlx, &core->pos->map->next->mv, BLOC, 'B');
 	}
 	else
 	{
-		if (core->pos->map->prev->map_value.content != '0')
-			return (printf("Vous ne pouvez pas build sur cette tile\n"));
-		mlx_delete_image(core->mlx, core->pos->map->prev->map_value.img);
-		core->pos->map->prev->map_value.texture = mlx_load_png(BLOC);
-		core->pos->map->prev->map_value.img = mlx_texture_to_image(core->mlx, core->pos->map->prev->map_value.texture);
-		mlx_image_to_window(core->mlx, core->pos->map->prev->map_value.img,
-							core->pos->map->prev->map_value.x * S, core->pos->map->prev->map_value.y * S);
-		core->pos->map->prev->map_value.content = 'B';
+		if (core->pos->map->prev->mv.content != '0')
+			return (ft_putstr("Vous ne pouvez pas build sur cette tile\n"));
+		mlx_delete_image(core->mlx, core->pos->map->prev->mv.img);
+		load_and_disp_img(core->mlx, &core->pos->map->prev->mv, BLOC, 'B');
 	}
 	core->pos->item--;
-
 	return (1);
 }
 

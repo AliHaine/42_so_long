@@ -20,15 +20,14 @@ static int	set_content_to_map(t_map *map, int co, t_core *core, t_three_int *t)
 		|| co == 'E' || co == 'M' || co == 'P')
 	{
 		setup_struct_value(map, t->x, t->y, co);
-		map->map_value.acces = 1;
 		if (co == 'P')
 		{
 			p = malloc(sizeof(*p));
-			if (p == NULL)
+			if (!p)
 				return (0);
 			core->pos = p;
 			core->pos->map = map;
-			core->pos->map->map_value.content = 'P';
+			core->pos->map->mv.content = 'P';
 			core->pos->dir = 1;
 			core->pos->movenbr = 0;
 			core->pos->item = 0;
@@ -36,7 +35,9 @@ static int	set_content_to_map(t_map *map, int co, t_core *core, t_three_int *t)
 		else if (co == 'E')
 			core->exit = map;
 		else if (co == '1')
-			map->map_value.acces = 0;
+			map->mv.acces = 0;
+		/*else if (co == 'C')
+			core->consumable++;*/
 	}
 	else
 		return (print_enum_msg(ERROR_MAP));
@@ -52,8 +53,8 @@ static int	setup_map_sval(struct s_core *core, struct s_three_int *ti, int c)
 		return (0);
 	if (c != 'C')
 	{
-		if (set_content_to_map(nouv, c, core, ti) == 0)
-			return (0);
+	if (set_content_to_map(nouv, c, core, ti) == 0)
+		return (0);
 	}
 	else
 	{

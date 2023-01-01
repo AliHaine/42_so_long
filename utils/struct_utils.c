@@ -25,10 +25,10 @@ void	set_tb_struct(struct s_map *map, int size)
 
 void	setup_struct_value(struct s_map *map, int x, int y, int c)
 {
-	map->map_value.x = x;
-	map->map_value.y = y;
-	map->map_value.content = c;
-	map->map_value.acces = 1;
+	map->mv.x = x;
+	map->mv.y = y;
+	map->mv.content = c;
+	map->mv.acces = 1;
 }
 
 void	free_struct(struct s_core *core)

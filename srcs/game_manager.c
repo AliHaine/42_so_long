@@ -12,7 +12,7 @@
 
 #include "../so_long.h"
 
-static void	load_and_disp_img(struct s_map_value *val, mlx_t *mlx)
+static void	display_lvl(struct s_map_value *val, mlx_t *mlx)
 {
 	if (val->content == '1')
 		val->texture = mlx_load_png(WALL);
@@ -34,11 +34,11 @@ static void	setup_map_struct_img(struct s_map *map, struct s_core *core)
 {
 	while (map)
 	{
-		if (map->map_value.content != 'P')
+		if (map->mv.content != 'P')
 		{
-			if (map->map_value.content == '1' && is_wall(map) == false)
-				map->map_value.content = 'B';
-			load_and_disp_img(&map->map_value, core->mlx);
+			if (map->mv.content == '1' && is_wall(map) == false)
+				map->mv.content = 'B';
+			display_lvl(&map->mv, core->mlx);
 		}
 		map = map->next;
 	}
@@ -50,9 +50,9 @@ void	game_loader(struct s_core *core)
 	core->pos->texture = mlx_load_png(P_D);
 	core->pos->img = mlx_texture_to_image(core->mlx, core->pos->texture);
 	mlx_image_to_window(core->mlx, core->pos->img,
-		core->pos->map->map_value.x * S, core->pos->map->map_value.y * S);
+		core->pos->map->mv.x * S, core->pos->map->mv.y * S);
 	if (core->consumable == 0)
-		core->exit->map_value.img->instances->enabled = 1;
+		core->exit->mv.img->instances->enabled = 1;
 	else
-		core->exit->map_value.img->instances->enabled = 0;
+		core->exit->mv.img->instances->enabled = 0;
 }

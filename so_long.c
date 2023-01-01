@@ -23,5 +23,7 @@ int	main(int argc, char *argv[])
 	mlx_loop_hook(core.mlx, &loop_event, &core.mlx);
 	mlx_loop(core.mlx);
 	mlx_terminate(core.mlx);
+	core.pos->img = mlx_put_string(core.mlx, "test", 64, 64);
+	mlx_image_to_window(core.mlx, core.pos->img, 64, 64);
 	return (0);
 }

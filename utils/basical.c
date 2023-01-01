@@ -65,7 +65,7 @@ int	check_content(int content, struct s_core *core)
 		mc = core->last;
 		while (mc->bot == NULL)
 		{
-			if (mc->map_value.content != '1')
+			if (mc->mv.content != '1')
 				return (print_enum_msg(ERROR_NO_WALL));
 			mc = mc->prev;
 		}
@@ -79,17 +79,17 @@ int	check_wall(struct s_map *map, struct s_three_int *three_int, int x)
 {
 	if (three_int->y == 0)
 	{
-		if (map->map_value.content != '1')
+		if (map->mv.content != '1')
 			return (print_enum_msg(ERROR_NO_WALL));
 	}
-	else if (three_int->x == 0 && map->prev->map_value.y != map->map_value.y)
+	else if (three_int->x == 0 && map->prev->mv.y != map->mv.y)
 	{
-		if (map->map_value.content != '1')
+		if (map->mv.content != '1')
 			return (print_enum_msg(ERROR_NO_WALL));
 	}
 	else if (x == three_int->size)
 	{
-		if (map->map_value.content != '1')
+		if (map->mv.content != '1')
 			return (print_enum_msg(ERROR_NO_WALL));
 	}
 	return (1);

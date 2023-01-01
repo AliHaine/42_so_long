@@ -61,7 +61,7 @@ typedef struct s_map_value
 
 typedef struct s_map
 {
-	struct s_map_value	map_value;
+	struct s_map_value	mv;
 	struct s_map		*prev;
 	struct s_map		*next;
 	struct s_map		*top;
@@ -72,7 +72,7 @@ typedef struct s_player
 {
 	struct s_map		*map;
 	int					movenbr;
-	int 				item;
+	int					item;
 	int					dir;
 	mlx_image_t			*img;
 	mlx_texture_t		*texture;
@@ -107,11 +107,12 @@ void	loop_event(void *core);
 void	set_tb_struct(struct s_map *map, int size);
 void	setup_struct_value(struct s_map *map, int x, int y, int c);
 void	game_loader(struct s_core *core);
-void	load_img(void *mv, mlx_t *mlx);
 void	my_sleep(double nb);
 void	move_event(struct s_core *core);
 void	hit_event(struct s_core *core);
 bool	is_wall(struct s_map *map);
+void	load_and_disp_img(mlx_t *mlx, t_map_value *mv, char *path, int c);
+void	i_or_c_action(struct s_core *core, struct s_map_value *mv);
 bool	can_goto(int c);
 bool	check_exit(struct s_core *core);
 char	*ft_itoa(unsigned int nb);
