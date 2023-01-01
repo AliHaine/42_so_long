@@ -6,8 +6,9 @@ SRCS =	so_long.c \
 		srcs/map_manager.c \
 		srcs/key_manager.c \
 		srcs/game_manager.c \
-		srcs/move_event.c \
 		srcs/map_utils.c \
+		srcs/event/move_event.c \
+		srcs/event/hit_event.c \
 		utils/basical.c \
 		utils/struct_utils.c \
 		utils/ft_itoa.c \

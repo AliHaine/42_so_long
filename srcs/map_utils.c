@@ -29,31 +29,22 @@ bool	check_exit(struct s_core *core)
 	return (false);
 }
 
-void	check_flood_fill(struct s_core *core)
+bool	is_wall(struct s_map *map)
 {
-	int		c;
-	int		e;
-	t_map	*flood;
+	if (map->bot == NULL)
+		return (true);
+	else if (map->top == NULL)
+		return (true);
+	else if (map->prev->map_value.y != map->map_value.y)
+		return (true);
+	else if (map->next->map_value.y != map->map_value.y)
+		return (true);
+	return (false);
+}
 
-	c = 0;
-	e = 0;
-	flood = core->first;
-	while (flood)
-	{
-		if (flood->map_value.content == 'C')
-			c++;
-		else if (flood->map_value.content == 'E')
-			e++;
-		flood = flood->next;
-	}
-	if (c != core->consumable)
-	{
-		print_enum_msg(ERROR_CONSUM_ACCESS);
-		exit(1);
-	}
-	if (e != 1)
-	{
-		print_enum_msg(ERROR_EXIT_ACCESS);
-		exit(1);
-	}
+bool	can_goto(int c)
+{
+	if (c == '1' || c == 'B')
+		return (false);
+	return (true);
 }

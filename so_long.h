@@ -25,6 +25,10 @@
 # define S 64
 # define WALL "./assets/deco/g.png"
 # define GROUND "./assets/deco/w.png"
+# define BLOC "./assets/deco/gb.png"
+# define BLOC1 "./assets/deco/gb1.png"
+# define BLOC2 "./assets/deco/gb2.png"
+# define BITEM "./assets/items/g_i.png"
 # define P_G "./assets/characters/p_01.png"
 # define P_GA "./assets/characters/p_a3.png"
 # define P_D "./assets/characters/p_0.png"
@@ -68,6 +72,7 @@ typedef struct s_player
 {
 	struct s_map		*map;
 	int					movenbr;
+	int 				item;
 	int					dir;
 	mlx_image_t			*img;
 	mlx_texture_t		*texture;
@@ -105,8 +110,10 @@ void	game_loader(struct s_core *core);
 void	load_img(void *mv, mlx_t *mlx);
 void	my_sleep(double nb);
 void	move_event(struct s_core *core);
+void	hit_event(struct s_core *core);
+bool	is_wall(struct s_map *map);
+bool	can_goto(int c);
 bool	check_exit(struct s_core *core);
-void	check_flood_fill(struct s_core *core);
 char	*ft_itoa(unsigned int nb);
 
 #endif

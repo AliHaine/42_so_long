@@ -24,6 +24,8 @@ static void	load_and_disp_img(struct s_map_value *val, mlx_t *mlx)
 		val->texture = mlx_load_png("./assets/items/e.png");
 	else if (val->content == 'M')
 		val->texture = mlx_load_png("./assets/characters/e_0.png");
+	else if (val->content == 'B')
+		val->texture = mlx_load_png(BLOC);
 	val->img = mlx_texture_to_image(mlx, val->texture);
 	mlx_image_to_window(mlx, val->img, val->x * S, val->y * S);
 }
@@ -33,7 +35,11 @@ static void	setup_map_struct_img(struct s_map *map, struct s_core *core)
 	while (map)
 	{
 		if (map->map_value.content != 'P')
+		{
+			if (map->map_value.content == '1' && is_wall(map) == false)
+				map->map_value.content = 'B';
 			load_and_disp_img(&map->map_value, core->mlx);
+		}
 		map = map->next;
 	}
 }
@@ -41,7 +47,7 @@ static void	setup_map_struct_img(struct s_map *map, struct s_core *core)
 void	game_loader(struct s_core *core)
 {
 	setup_map_struct_img(core->first, core);
-	core->pos->texture = mlx_load_png("./assets/characters/p_0.png");
+	core->pos->texture = mlx_load_png(P_D);
 	core->pos->img = mlx_texture_to_image(core->mlx, core->pos->texture);
 	mlx_image_to_window(core->mlx, core->pos->img,
 		core->pos->map->map_value.x * S, core->pos->map->map_value.y * S);

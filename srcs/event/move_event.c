@@ -10,13 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../so_long.h"
+#include "../../so_long.h"
 
 void	move_up(struct s_core *core)
 {
 	if (core->pos->map->top->map_value.content == 'M')
 		exit(1);
-	else if (core->pos->map->top->map_value.content != '1')
+	else if (can_goto(core->pos->map->top->map_value.content) == true)
 	{
 		if (core->pos->map->top->map_value.content == 'C')
 		{
@@ -25,9 +25,18 @@ void	move_up(struct s_core *core)
 			if (core->consumable == 0)
 				core->exit->map_value.img->instances->enabled = 1;
 		}
+		else if (core->pos->map->top->map_value.content == 'I')
+		{
+			core->pos->item++;
+			mlx_delete_image(core->mlx, core->pos->map->top->map_value.img);
+			core->pos->map->top->map_value.texture = mlx_load_png(GROUND);
+			core->pos->map->top->map_value.img = mlx_texture_to_image(core->mlx, core->pos->map->top->map_value.texture);
+			mlx_image_to_window(core->mlx, core->pos->map->top->map_value.img,
+								core->pos->map->top->map_value.x * S, core->pos->map->top->map_value.y * S);
+		}
 		core->pos->img->instances[0].y -= S;
-		core->pos->map = core->pos->map->top;
 		core->pos->map->map_value.content = '0';
+		core->pos->map = core->pos->map->top;
 		core->pos->map->map_value.content = 'P';
 		core->pos->movenbr++;
 		ft_putstr(ft_itoa(core->pos->movenbr));
@@ -40,7 +49,7 @@ void	move_down(struct s_core *core)
 {
 	if (core->pos->map->bot->map_value.content == 'M')
 		exit(1);
-	else if (core->pos->map->bot->map_value.content != '1')
+	else if (can_goto(core->pos->map->bot->map_value.content) == true)
 	{
 		if (core->pos->map->bot->map_value.content == 'C')
 		{
@@ -48,6 +57,16 @@ void	move_down(struct s_core *core)
 			mlx_delete_image(core->mlx, core->pos->map->bot->map_value.img);
 			if (core->consumable == 0)
 				core->exit->map_value.img->instances->enabled = 1;
+		}
+		else if (core->pos->map->bot->map_value.content == 'I')
+		{
+			core->pos->item++;
+			mlx_delete_image(core->mlx, core->pos->map->bot->map_value.img);
+			core->pos->map->bot->map_value.texture = mlx_load_png(GROUND);
+			core->pos->map->bot->map_value.img = mlx_texture_to_image(core->mlx, core->pos->map->bot->map_value.texture);
+			mlx_image_to_window(core->mlx, core->pos->map->bot->map_value.img,
+								core->pos->map->bot->map_value.x * S, core->pos->map->bot->map_value.y * S);
+
 		}
 		core->pos->img->instances[0].y += S;
 		core->pos->map->map_value.content = '0';
@@ -64,7 +83,7 @@ void	move_left(struct s_core *core)
 {
 	if (core->pos->map->prev->map_value.content == 'M')
 		exit(1);
-	else if (core->pos->map->prev->map_value.content != '1')
+	else if (can_goto(core->pos->map->prev->map_value.content) == true)
 	{
 		if (core->pos->map->prev->map_value.content == 'C')
 		{
@@ -72,6 +91,15 @@ void	move_left(struct s_core *core)
 			mlx_delete_image(core->mlx, core->pos->map->prev->map_value.img);
 			if (core->consumable == 0)
 				core->exit->map_value.img->instances->enabled = 1;
+		}
+		else if (core->pos->map->prev->map_value.content == 'I')
+		{
+			core->pos->item++;
+			mlx_delete_image(core->mlx, core->pos->map->prev->map_value.img);
+			core->pos->map->prev->map_value.texture = mlx_load_png(GROUND);
+			core->pos->map->prev->map_value.img = mlx_texture_to_image(core->mlx, core->pos->map->prev->map_value.texture);
+			mlx_image_to_window(core->mlx, core->pos->map->prev->map_value.img,
+								core->pos->map->prev->map_value.x * S, core->pos->map->prev->map_value.y * S);
 		}
 		core->pos->img->instances[0].x -= S;
 		core->pos->map->map_value.content = '0';
@@ -94,7 +122,7 @@ void	move_right(struct s_core *core)
 {
 	if (core->pos->map->next->map_value.content == 'M')
 		exit(1);
-	else if (core->pos->map->next->map_value.content != '1')
+	else if (can_goto(core->pos->map->next->map_value.content) == true)
 	{
 		if (core->pos->map->next->map_value.content == 'C')
 		{
@@ -102,6 +130,15 @@ void	move_right(struct s_core *core)
 			mlx_delete_image(core->mlx, core->pos->map->next->map_value.img);
 			if (core->consumable == 0)
 				core->exit->map_value.img->instances->enabled = 1;
+		}
+		else if (core->pos->map->next->map_value.content == 'I')
+		{
+			core->pos->item++;
+			mlx_delete_image(core->mlx, core->pos->map->next->map_value.img);
+			core->pos->map->next->map_value.texture = mlx_load_png(GROUND);
+			core->pos->map->next->map_value.img = mlx_texture_to_image(core->mlx, core->pos->map->next->map_value.texture);
+			mlx_image_to_window(core->mlx, core->pos->map->next->map_value.img,
+								core->pos->map->next->map_value.x * S, core->pos->map->next->map_value.y * S);
 		}
 		core->pos->img->instances[0].x += S;
 		core->pos->map->map_value.content = '0';

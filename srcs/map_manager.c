@@ -31,6 +31,7 @@ static int	set_content_to_map(t_map *map, int co, t_core *core, t_three_int *t)
 			core->pos->map->map_value.content = 'P';
 			core->pos->dir = 1;
 			core->pos->movenbr = 0;
+			core->pos->item = 0;
 		}
 		else if (co == 'E')
 			core->exit = map;
@@ -123,7 +124,6 @@ void	map_loader(char *file, struct s_core *core)
 	fd = check_map_val(fd, 0, core, &three_int);
 	if (fd != 1)
 		free_struct(core);
-	check_flood_fill(core);
 	core->last->next = NULL;
 	core->last->bot = NULL;
 	core->mlx = mlx_init(three_int.size * S, three_int.y * S, "Game", true);
