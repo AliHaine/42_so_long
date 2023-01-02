@@ -6,7 +6,7 @@
 /*   By: ayagmur <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 17:05:06 by ayagmur           #+#    #+#             */
-/*   Updated: 2022/12/28 17:05:07 by ayagmur          ###   ########.fr       */
+/*   Updated: 2023/01/02 17:52:53 by ayagmur          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,9 @@ int	check_content(int content, struct s_core *core)
 {
 	t_map	*mc;
 
-	if (content == '0' || content == '1' || content == 'X' || content == 'M')
+	if (content == '0' || content == '1' || content == 'X' || content == 'M'
+		|| content == 'C')
 		return (1);
-	else if (content == 'C')
-		core->consumable++;
 	else if (content == 'E' || content == 'P' || content == 'Z')
 		return (check_content_pe(content));
 	else if (content == 'T')

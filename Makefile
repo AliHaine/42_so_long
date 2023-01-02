@@ -23,7 +23,7 @@ OBJS = ${SRCS:.c=.o}
 	${CC} ${CFLAGS} $(INC) -g3 -c $< -o ${<:.c=.o}
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(MINILIBX) $(OBJS) -fsanitize=address -o $(NAME)
+	$(CC) $(CFLAGS) $(MINILIBX) $(OBJS) -o $(NAME)
 
 all: $(NAME)
 

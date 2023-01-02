@@ -6,7 +6,7 @@
 /*   By: ayagmur <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 17:03:43 by ayagmur           #+#    #+#             */
-/*   Updated: 2022/12/28 17:03:49 by ayagmur          ###   ########.fr       */
+/*   Updated: 2023/01/02 17:52:29 by ayagmur          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ static int	set_content_to_map(t_map *map, int co, t_core *core, t_three_int *t)
 	t_player	*p;
 
 	if (co == '0' || co == '1'
-		|| co == 'E' || co == 'M' || co == 'P')
+		|| co == 'E' || co == 'M' ||
+			co == 'P' || co == 'C')
 	{
 		setup_struct_value(map, t->x, t->y, co);
 		if (co == 'P')
@@ -36,8 +37,8 @@ static int	set_content_to_map(t_map *map, int co, t_core *core, t_three_int *t)
 			core->exit = map;
 		else if (co == '1')
 			map->mv.acces = 0;
-		/*else if (co == 'C')
-			core->consumable++;*/
+		else if (co == 'C')
+			core->consumable++;
 	}
 	else
 		return (print_enum_msg(ERROR_MAP));
@@ -51,21 +52,13 @@ static int	setup_map_sval(struct s_core *core, struct s_three_int *ti, int c)
 	nouv = malloc(sizeof(*nouv));
 	if (!nouv)
 		return (0);
-	if (c != 'C')
-	{
 	if (set_content_to_map(nouv, c, core, ti) == 0)
 		return (0);
-	}
-	else
-	{
-		setup_struct_value(nouv, ti->x, ti->y, c);
-		core->consumable++;
-	}
 	nouv->prev = (*core).last;
 	nouv->next = NULL;
 	nouv->bot = NULL;
 	if (check_wall(nouv, ti, ti->x + 1) == 0)
-		free_struct(core);
+		return (0);
 	if (ti->y == 0)
 		nouv->top = NULL;
 	else
@@ -122,9 +115,9 @@ void	map_loader(char *file, struct s_core *core)
 	three_int.size = 0;
 	check_ber(file);
 	fd = open(file, O_RDONLY);
-	fd = check_map_val(fd, 0, core, &three_int);
-	if (fd != 1)
+	if (check_map_val(fd, 0, core, &three_int) == 0)
 		free_struct(core);
+	close(fd);
 	core->last->next = NULL;
 	core->last->bot = NULL;
 	core->mlx = mlx_init(three_int.size * S, three_int.y * S, "Game", true);
