@@ -12,6 +12,32 @@
 
 #include "../so_long.h"
 
+static bool	is_exit(struct s_core *core)
+{
+	int	x1;
+	int	x2;
+	int	y1;
+	int	y2;
+
+	if (core->pos->dir == 1)
+	{
+		x1 = core->pos->map->next->mv.x;
+		x2 = core->exit->mv.x;
+		y1 = core->pos->map->next->mv.y;
+		y2 = core->exit->mv.y;
+	}
+	else
+	{
+		x1 = core->pos->map->prev->mv.x;
+		x2 = core->exit->mv.x;
+		y1 = core->pos->map->prev->mv.y;
+		y2 = core->exit->mv.y;
+	}
+	if (x1 == x2 && y1 == y2)
+		return (true);
+	return (false);
+}
+
 static int	launch_animation(t_core *core, int *boul, int x, int y)
 {
 	*boul *= -1;
@@ -63,14 +89,14 @@ static int	build_event(struct s_core *core)
 		return (ft_putstr("Vous n'avez pas d'item\n"));
 	if (core->pos->dir == 1)
 	{
-		if (core->pos->map->next->mv.content != '0')
+		if (core->pos->map->next->mv.content != '0' || is_exit(core))
 			return (ft_putstr("Vous ne pouvez pas build sur cette tile\n"));
 		mlx_delete_image(core->mlx, core->pos->map->next->mv.img);
 		load_and_disp_img(core->mlx, &core->pos->map->next->mv, BLOC, 'B');
 	}
 	else
 	{
-		if (core->pos->map->prev->mv.content != '0')
+		if (core->pos->map->prev->mv.content != '0' || is_exit(core))
 			return (ft_putstr("Vous ne pouvez pas build sur cette tile\n"));
 		mlx_delete_image(core->mlx, core->pos->map->prev->mv.img);
 		load_and_disp_img(core->mlx, &core->pos->map->prev->mv, BLOC, 'B');

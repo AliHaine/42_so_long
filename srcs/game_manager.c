@@ -55,4 +55,5 @@ void	game_loader(struct s_core *core)
 		core->exit->mv.img->instances->enabled = 1;
 	else
 		core->exit->mv.img->instances->enabled = 0;
+	core->txt = mlx_put_string(core->mlx, "0", 0, 0);
 }

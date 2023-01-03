@@ -98,6 +98,9 @@ void	move_right(struct s_core *core)
 
 void	move_event(struct s_core *core)
 {
+	mlx_delete_image(((t_core *)core)->mlx, ((t_core *)core)->txt);
+	((t_core *)core)->txt = mlx_put_string(((t_core *)core)->mlx,
+			ft_itoa(((t_core *)core)->pos->movenbr), 0, 0);
 	if (mlx_is_key_down(core->mlx, MLX_KEY_W)
 		|| mlx_is_key_down(core->mlx, MLX_KEY_UP))
 		move_up(core);

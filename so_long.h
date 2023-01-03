@@ -85,6 +85,7 @@ typedef struct s_core
 	struct s_map	*last;
 	struct s_map	*exit;
 	struct s_player	*pos;
+	mlx_image_t		*txt;
 	int				consumable;
 }	t_core;
 

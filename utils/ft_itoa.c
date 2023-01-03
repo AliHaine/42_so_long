@@ -55,7 +55,7 @@ char	*ft_itoa(unsigned int nb)
 	while (size - 1 > 0)
 	{
 		str[i++] = (nb / pui(size - 1)) + '0';
-		nb %= 10;
+		nb %= pui(size - 1);
 		size--;
 	}
 	str[save - 1] = nb + '0';

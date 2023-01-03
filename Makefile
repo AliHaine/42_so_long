@@ -27,6 +27,8 @@ $(NAME): $(OBJS)
 
 all: $(NAME)
 
+bonus: all
+
 clean:
 	rm -rf $(OBJS) $(OBJS_BONUS)
 

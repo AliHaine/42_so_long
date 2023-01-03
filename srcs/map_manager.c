@@ -87,6 +87,7 @@ static int	check_map_val(int fd, int i, t_core *core, t_three_int *ti)
 			ti->x++;
 			i++;
 		}
+		free(line);
 		if (ti->size == 0)
 			ti->size = ti->x;
 		else if (ti->size != ti->x)
@@ -115,6 +116,11 @@ void	map_loader(char *file, struct s_core *core)
 	three_int.size = 0;
 	check_ber(file);
 	fd = open(file, O_RDONLY);
+	if (fd < 0)
+	{
+		print_enum_msg(ERROR);
+		exit(0);
+	}
 	if (check_map_val(fd, 0, core, &three_int) == 0)
 		free_struct(core);
 	close(fd);
