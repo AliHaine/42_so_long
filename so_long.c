@@ -17,7 +17,10 @@ int	main(int argc, char *argv[])
 	struct s_core	core;
 
 	if (argc != 2)
-		return(0);
+	{
+		print_enum_msg(ERROR);
+		return (0);
+	}
 	map_loader(argv[1], &core);
 	game_loader(&core);
 	mlx_key_hook(core.mlx, &key_event, &core.mlx);

@@ -50,7 +50,6 @@ typedef enum MSG
 
 typedef struct s_map_value
 {
-	short			exit;
 	int				content;
 	int				x;
 	int				y;

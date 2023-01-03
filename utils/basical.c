@@ -50,8 +50,9 @@ static int	check_content_pe(int content)
 	return (1);
 }
 
-int	check_content(int content, struct s_core *core) {
-	t_map *mc;
+int	check_content(int content, struct s_core *core)
+{
+	t_map	*mc;
 
 	if (content == '0' || content == '1' || content == 'X' || content == 'M'
 		|| content == 'C')
@@ -63,7 +64,7 @@ int	check_content(int content, struct s_core *core) {
 	else if (content == 'T')
 	{
 		if (core->consumable == 0)
-			return(print_enum_msg(ERROR_MAP));
+			return (print_enum_msg(ERROR_MAP));
 		mc = core->last;
 		while (mc->bot == NULL)
 		{

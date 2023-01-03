@@ -12,27 +12,31 @@
 
 #include "../so_long.h"
 
-static int	set_content_to_map(t_map *map, int co, t_core *core, t_three_int *t)
+static int	set_content_player(struct s_map *map, struct s_core *core)
 {
 	t_player	*p;
 
+	p = malloc(sizeof(*p));
+	if (!p)
+		return (0);
+	core->pos = p;
+	core->pos->map = map;
+	core->pos->map->mv.content = 'P';
+	core->pos->dir = 1;
+	core->pos->movenbr = 0;
+	core->pos->item = 0;
+	return (1);
+}
+
+static int	set_content_to_map(t_map *map, int co, t_core *core, t_three_int *t)
+{
 	if (co == '0' || co == '1'
-		|| co == 'E' || co == 'M' ||
-			co == 'P' || co == 'C')
+		|| co == 'E' || co == 'M'
+		|| co == 'P' || co == 'C')
 	{
 		setup_struct_value(map, t->x, t->y, co);
 		if (co == 'P')
-		{
-			p = malloc(sizeof(*p));
-			if (!p)
-				return (0);
-			core->pos = p;
-			core->pos->map = map;
-			core->pos->map->mv.content = 'P';
-			core->pos->dir = 1;
-			core->pos->movenbr = 0;
-			core->pos->item = 0;
-		}
+			set_content_player(map, core);
 		else if (co == 'E')
 			core->exit = map;
 		else if (co == '1')
@@ -82,10 +86,9 @@ static int	check_map_val(int fd, int i, t_core *core, t_three_int *ti)
 			break ;
 		while (line[i] && line[i] != '\n')
 		{
-			if (setup_map_sval(core, ti, line[i]) == 0)
+			if (setup_map_sval(core, ti, line[i++]) == 0)
 				return (0);
 			ti->x++;
-			i++;
 		}
 		free(line);
 		if (ti->size == 0)
