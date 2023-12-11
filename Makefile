@@ -14,8 +14,12 @@ SRCS =	so_long.c \
 		utils/ft_itoa.c \
 		utils/get_next_line/get_next_line.c \
 		utils/get_next_line/get_next_line_utils.c
-INC	= -I ../MLX42/include
-MINILIBX = ../MLX42/libmlx42.a -lglfw -L "/Users/$$USER/.brew/opt/glfw/lib/" 
+INC	= -I /libs/MLX42/include
+ifeq ($(UNAME), Darwin)
+MINILIBX = ../MLX42/build/libmlx42.a -lglfw -L "/Users/$$USER/.brew/opt/glfw/lib/"
+else
+MINILIBX = "./libs/MLX42/build/libmlx42.a" -Iinclude -ldl -lglfw -pthread -lm -Wl,-rpath=./libs/MLX42/
+endif
 
 OBJS = ${SRCS:.c=.o}
 
